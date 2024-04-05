@@ -12,8 +12,9 @@ androidx-compose-bom = "2024.02.00"
 agp = "8.2.2"
 kotlin = "1.9.21"
 
-squareup-retrofit = "2.9.0"
+squareup-retrofit = "2.10.0"
 squareup-javapoet = "1.13.0"
+okhttp3-logging-interceptor = "4.12.0"
 coil-compose = "2.5.0"
 
 hilt-android = "2.50"
@@ -40,7 +41,9 @@ android-gradle = { group = "com.android.tools.build", name = "gradle", version.r
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 com-squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "squareup-retrofit" }
+com-squareup-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "squareup-retrofit" }
 com-squareup-javapoet = { group = "com.squareup", name = "javapoet", version.ref = "squareup-javapoet" }
+com-squareup-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3-logging-interceptor" }
 
 io-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-compose" }
 
@@ -49,7 +52,7 @@ dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-andro
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-android-library = { id = "com.android.library", version.ref = "agp"}
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android" }
