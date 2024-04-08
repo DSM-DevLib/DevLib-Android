@@ -242,3 +242,7 @@ buildSrc/build/libs/buildSrc.jar
 buildSrc/.gradle/buildOutputCleanup/outputFiles.bin
 
 buildSrc/.gradle/file-system.probe
+
+.gradle/buildOutputCleanup/cache.properties
+
+buildSrc/.gradle/buildOutputCleanup/cache.properties
