@@ -68,6 +68,8 @@ dependencies {
     api(libs.com.squareup.retrofit2.converter.gson)
     api(libs.com.squareup.logging.interceptor)
 
+    api(libs.androidx.compose.navigation)
+
     testApi(libs.junit)
     androidTestApi(libs.androidx.junit)
     androidTestApi(libs.androidx.espresso.core)
