@@ -2,6 +2,8 @@
 plugins {
     id(libs.plugins.android.application.get().pluginId)
     id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.hilt.android.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -58,6 +60,13 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+
+    api(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.android.compiler)
+
+    api(libs.com.squareup.retrofit2)
+    api(libs.com.squareup.retrofit2.converter.gson)
+    api(libs.com.squareup.logging.interceptor)
 
     testApi(libs.junit)
     androidTestApi(libs.androidx.junit)
