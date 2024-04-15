@@ -13,8 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import team.aliens.dms.android.core.designsystem.LocalToast
 import team.aliens.dms.android.core.designsystem.TextField
 import team.devlib.android.R
 import team.devlib.designsystem.ui.ButtonDefaults
@@ -41,6 +44,23 @@ internal fun SignInScreen(
     val (email, onEmailChange) = remember { mutableStateOf("") }
     val (password, onPasswordChange) = remember { mutableStateOf("") }
     val (visible, setVisible) = remember { mutableStateOf(false) }
+    val toast = LocalToast.current
+    var emailError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
+
+    viewModel.collectSideEffect {
+        when (it) {
+            is SignInSideEffect.Success -> {
+                toast.showSuccessToast(message = "성공적으로 로그인 되었습니다!")
+            }
+
+            is SignInSideEffect.Failure -> {
+                toast.showErrorToast(it.message)
+                emailError = it.notFoundUser
+                passwordError = it.invalidPassword
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -74,6 +94,13 @@ internal fun SignInScreen(
                     text = "아이디",
                     style = DmsTheme.typography.body2,
                 )
+            },
+            isError = emailError,
+            supportingText = {
+                Text(
+                    text = "존재하지 않는 아이디입니다.",
+                    style = DmsTheme.typography.body3,
+                )
             }
         )
         Spacer(modifier = Modifier.height(30.dp))
@@ -86,6 +113,7 @@ internal fun SignInScreen(
                     style = DmsTheme.typography.body2,
                 )
             },
+            isError = passwordError,
             trailingIcon = {
                 IconButton(
                     onClick = { setVisible(!visible) },
@@ -100,7 +128,13 @@ internal fun SignInScreen(
                 }
             },
             visualTransformation = if (visible) VisualTransformation.None
-            else PasswordVisualTransformation()
+            else PasswordVisualTransformation(),
+            supportingText = {
+                Text(
+                    text = "잘못된 비밀번호입니다.",
+                    style = DmsTheme.typography.body3,
+                )
+            }
         )
         Spacer(modifier = Modifier.weight(1f))
         ContainedButton(
@@ -108,7 +142,12 @@ internal fun SignInScreen(
                 .fillMaxWidth()
                 .imePadding()
                 .padding(bottom = 56.dp),
-            onClick = { /*TODO*/ },
+            onClick = {
+                viewModel.signIn(
+                    accountId = email,
+                    password = password,
+                )
+            },
             colors = ButtonDefaults.buttonColors(containerColor = DmsTheme.colorScheme.surfaceVariant),
         ) {
             Text(
