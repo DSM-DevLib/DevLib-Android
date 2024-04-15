@@ -55,7 +55,7 @@ internal fun SignInScreen(
             }
 
             is SignInSideEffect.Failure -> {
-                toast.showErrorToast(it.message)
+                it.message?.let { toast.showErrorToast(it) }
                 emailError = it.notFoundUser
                 passwordError = it.invalidPassword
             }
@@ -97,10 +97,12 @@ internal fun SignInScreen(
             },
             isError = emailError,
             supportingText = {
-                Text(
-                    text = "존재하지 않는 아이디입니다.",
-                    style = DmsTheme.typography.body3,
-                )
+                if (emailError) {
+                    Text(
+                        text = "존재하지 않는 아이디입니다.",
+                        style = DmsTheme.typography.body3,
+                    )
+                }
             }
         )
         Spacer(modifier = Modifier.height(30.dp))
@@ -130,10 +132,12 @@ internal fun SignInScreen(
             visualTransformation = if (visible) VisualTransformation.None
             else PasswordVisualTransformation(),
             supportingText = {
-                Text(
-                    text = "잘못된 비밀번호입니다.",
-                    style = DmsTheme.typography.body3,
-                )
+                if (passwordError) {
+                    Text(
+                        text = "잘못된 비밀번호입니다.",
+                        style = DmsTheme.typography.body3,
+                    )
+                }
             }
         )
         Spacer(modifier = Modifier.weight(1f))

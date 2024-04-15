@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import team.devlib.android.data.api.UserApi
 import javax.inject.Singleton
 
-private const val BASE_URL = "http://localhost:8080"
+private const val BASE_URL = "https://devlib.xquare.app"
 
 @Module
 @InstallIn(SingletonComponent::class)

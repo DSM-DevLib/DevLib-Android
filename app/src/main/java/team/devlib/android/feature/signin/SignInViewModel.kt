@@ -41,7 +41,7 @@ internal class SignInViewModel @Inject constructor(
                     SignInSideEffect.Failure(
                         notFoundUser = it is NotFoundException,
                         invalidPassword = it is UnAuthorizedException,
-                        message = it.message.toString(),
+                        message = it.message,
                     )
                 )
             }
@@ -54,6 +54,6 @@ internal sealed interface SignInSideEffect {
     data class Failure(
         val notFoundUser: Boolean,
         val invalidPassword: Boolean,
-        val message: String,
+        val message: String?,
     ) : SignInSideEffect
 }
