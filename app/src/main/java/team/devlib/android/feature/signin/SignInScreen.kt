@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import team.aliens.dms.android.core.designsystem.TextField
@@ -33,7 +34,10 @@ import team.devlib.designsystem.ui.ContainedButton
 import team.devlib.designsystem.ui.DmsTheme
 
 @Composable
-internal fun SignInScreen(navController: NavController) {
+internal fun SignInScreen(
+    navController: NavController,
+    viewModel: SignInViewModel = hiltViewModel(),
+) {
     val (email, onEmailChange) = remember { mutableStateOf("") }
     val (password, onPasswordChange) = remember { mutableStateOf("") }
     val (visible, setVisible) = remember { mutableStateOf(false) }

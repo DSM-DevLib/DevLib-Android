@@ -10,13 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
+import team.devlib.android.NavigationRoute
 import team.devlib.android.R
 
 @Composable
 internal fun SplashScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         delay(2000L)
-        // navController
+        navController.navigate(NavigationRoute.Auth.SIGN_IN)
     }
     Box(
         modifier = Modifier.fillMaxSize(),
