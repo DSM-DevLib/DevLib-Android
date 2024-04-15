@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import team.devlib.android.feature.signin.SignInScreen
 import team.devlib.android.feature.splash.SplashScreen
 
 @Composable
@@ -27,6 +28,10 @@ private fun NavGraphBuilder.auth(navController: NavController) {
     ) {
         composable(route = NavigationRoute.Auth.SPLASH) {
             SplashScreen(navController = navController)
+        }
+
+        composable(route = NavigationRoute.Auth.SIGN_IN) {
+            SignInScreen(navController = navController)
         }
     }
 }

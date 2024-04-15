@@ -62,11 +62,13 @@ dependencies {
     implementation(libs.androidx.compose.material3)
 
     api(libs.dagger.hilt.android)
+    api(libs.androidx.hilt.navigation.compose)
     kapt(libs.dagger.hilt.android.compiler)
 
     api(libs.com.squareup.retrofit2)
     api(libs.com.squareup.retrofit2.converter.gson)
     api(libs.com.squareup.logging.interceptor)
+    api(libs.com.squareup.javapoet)
 
     api(libs.androidx.compose.navigation)
 
