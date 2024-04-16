@@ -1,4 +1,4 @@
-package team.devlib.android.feature.signin
+package team.devlib.android.feature.signup
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -28,11 +28,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import team.aliens.dms.android.core.designsystem.LocalToast
 import team.aliens.dms.android.core.designsystem.TextField
 import team.devlib.android.NavigationRoute
 import team.devlib.android.R
@@ -41,35 +38,22 @@ import team.devlib.designsystem.ui.ContainedButton
 import team.devlib.designsystem.ui.DmsTheme
 
 @Composable
-internal fun SignInScreen(
+internal fun SignUpScreen(
     navController: NavController,
-    viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val (email, onEmailChange) = remember { mutableStateOf("") }
     val (password, onPasswordChange) = remember { mutableStateOf("") }
+    val (passwordRepeat, onPasswordRepeatChange) = remember { mutableStateOf("") }
     val (visible, setVisible) = remember { mutableStateOf(false) }
-    val toast = LocalToast.current
+    val (passwordRepeatVisible, setPasswordRepeatVisible) = remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
-
-    viewModel.collectSideEffect {
-        when (it) {
-            is SignInSideEffect.Success -> {
-                toast.showSuccessToast(message = "성공적으로 로그인 되었습니다!")
-            }
-
-            is SignInSideEffect.Failure -> {
-                it.message?.let { toast.showErrorToast(it) }
-                emailError = it.notFoundUser
-                passwordError = it.invalidPassword
-            }
-        }
-    }
+    var passwordRepeatError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp),
     ) {
         Column(modifier = Modifier.padding(top = 128.dp)) {
             Image(
@@ -83,7 +67,7 @@ internal fun SignInScreen(
                 contentDescription = null,
             )
             Text(
-                text = "로그인",
+                text = "회원가입",
                 style = DmsTheme.typography.headline1.copy(fontSize = 32.sp),
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF555555),
@@ -144,12 +128,51 @@ internal fun SignInScreen(
                 }
             }
         )
+        Spacer(modifier = Modifier.height(30.dp))
+        TextField(
+            value = passwordRepeat,
+            onValueChange = onPasswordRepeatChange,
+            hint = {
+                Text(
+                    text = "비밀번호 확인",
+                    style = DmsTheme.typography.body2,
+                )
+            },
+            isError = passwordRepeatError,
+            trailingIcon = {
+                IconButton(
+                    onClick = { setPasswordRepeatVisible(!passwordRepeatVisible) },
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (passwordRepeatVisible) team.devlib.android.designsystem.R.drawable.ic_password_visible
+                            else team.devlib.android.designsystem.R.drawable.ic_password_invisible,
+                        ),
+                        contentDescription = null,
+                    )
+                }
+            },
+            visualTransformation = if (passwordRepeatVisible) VisualTransformation.None
+            else PasswordVisualTransformation(),
+            supportingText = {
+                if (passwordRepeatError) {
+                    Text(
+                        text = "비밀번호가 일치하지 않습니다.",
+                        style = DmsTheme.typography.body3,
+                    )
+                }
+            }
+        )
         Text(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(12.dp)
-                .clickable{ navController.navigate(NavigationRoute.Auth.SIGN_UP) },
-            text = "회원가입",
+                .clickable {
+                    navController.navigate(NavigationRoute.Auth.SIGN_IN) {
+                        popUpTo(0)
+                    }
+                },
+            text = "로그인",
             style = DmsTheme.typography.caption,
             color = DmsTheme.colorScheme.onSurfaceVariant,
         )
@@ -160,15 +183,15 @@ internal fun SignInScreen(
                 .imePadding()
                 .padding(bottom = 56.dp),
             onClick = {
-                viewModel.signIn(
+                /*viewModel.signIn(
                     accountId = email,
                     password = password,
-                )
+                )*/
             },
             colors = ButtonDefaults.buttonColors(containerColor = DmsTheme.colorScheme.surfaceVariant),
         ) {
             Text(
-                text = "로그인",
+                text = "회원가입",
                 style = DmsTheme.typography.body3,
                 fontWeight = FontWeight.Bold,
             )
@@ -178,8 +201,8 @@ internal fun SignInScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun SignInPreview() {
+private fun SignUpPreview() {
     DmsTheme {
-        SignInScreen(navController = rememberNavController())
+        SignUpScreen(navController = rememberNavController())
     }
 }
