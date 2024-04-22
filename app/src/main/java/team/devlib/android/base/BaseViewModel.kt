@@ -1,4 +1,4 @@
-package team.devlib.android
+package team.devlib.android.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

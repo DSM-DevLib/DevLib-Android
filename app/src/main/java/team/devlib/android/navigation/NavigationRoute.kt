@@ -1,4 +1,4 @@
-package team.devlib.android
+package team.devlib.android.navigation
 
 sealed class NavigationRoute(val route: String) {
     data object Auth : NavigationRoute(route = "/auth") {

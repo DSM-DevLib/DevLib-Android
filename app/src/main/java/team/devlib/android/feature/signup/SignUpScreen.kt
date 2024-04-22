@@ -36,7 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import team.aliens.dms.android.core.designsystem.LocalToast
 import team.aliens.dms.android.core.designsystem.TextField
-import team.devlib.android.NavigationRoute
+import team.devlib.android.navigation.NavigationRoute
 import team.devlib.android.R
 import team.devlib.designsystem.ui.ButtonDefaults
 import team.devlib.designsystem.ui.ContainedButton

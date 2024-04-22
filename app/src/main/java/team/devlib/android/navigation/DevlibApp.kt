@@ -1,4 +1,4 @@
-package team.devlib.android
+package team.devlib.android.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

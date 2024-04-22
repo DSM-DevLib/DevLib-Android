@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import team.devlib.android.BaseViewModel
+import team.devlib.android.base.BaseViewModel
 import team.devlib.android.data.api.UserApi
 import team.devlib.android.data.di.NetworkModule
 import team.devlib.android.data.model.user.request.SignUpRequest
