@@ -8,6 +8,9 @@ import team.devlib.android.BaseViewModel
 import team.devlib.android.data.api.UserApi
 import team.devlib.android.data.di.NetworkModule
 import team.devlib.android.data.model.user.request.SignUpRequest
+import team.devlib.android.data.model.user.response.TokenResponse
+import team.devlib.android.domain.util.ConflictException
+import team.retum.network.util.RequestHandler
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,12 +22,14 @@ internal class SignUpViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             with(state.value) {
                 runCatching {
-                    userApi.signUp(
-                        signUpRequest = SignUpRequest(
-                            accountId = accountId,
-                            password = password,
+                    RequestHandler<TokenResponse>().request {
+                        userApi.signUp(
+                            signUpRequest = SignUpRequest(
+                                accountId = accountId,
+                                password = password,
+                            )
                         )
-                    )
+                    }
                 }.onSuccess {
                     NetworkModule.accessToken = it.accessToken
                     postSideEffect(SignUpSideEffect.Success("성공적으로 회원가입 되었습니다!"))
@@ -32,6 +37,10 @@ internal class SignUpViewModel @Inject constructor(
                     when (it) {
                         is KotlinNullPointerException -> {
                             postSideEffect(SignUpSideEffect.Success("성공적으로 회원가입 되었습니다!"))
+                        }
+
+                        is ConflictException -> {
+                            postSideEffect(SignUpSideEffect.Failure("이미 존재하는 이메일이에요"))
                         }
                     }
                 }
@@ -74,5 +83,5 @@ internal data class SignUpState(
 
 internal sealed interface SignUpSideEffect {
     data class Success(val message: String) : SignUpSideEffect
-    data object Failure : SignUpSideEffect
+    data class Failure(val message: String) : SignUpSideEffect
 }

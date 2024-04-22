@@ -53,7 +53,7 @@ internal fun SignInScreen(
     var passwordError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.collectSideEffect {
+        viewModel.sideEffect.collect {
             when (it) {
                 is SignInSideEffect.Success -> {
                     withContext(Dispatchers.Main) {

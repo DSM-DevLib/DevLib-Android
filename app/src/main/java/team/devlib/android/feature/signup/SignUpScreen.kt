@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import team.aliens.dms.android.core.designsystem.LocalToast
 import team.aliens.dms.android.core.designsystem.TextField
 import team.devlib.android.NavigationRoute
@@ -49,14 +52,21 @@ internal fun SignUpScreen(
     val (visible, setVisible) = remember { mutableStateOf(false) }
     val (passwordRepeatVisible, setPasswordRepeatVisible) = remember { mutableStateOf(false) }
 
-    signUpViewModel.collectSideEffect {
-        when (it) {
-            is SignUpSideEffect.Success -> {
-                toast.showSuccessToast(message = it.message)
-            }
+    LaunchedEffect(Unit) {
+        signUpViewModel.sideEffect.collect {
+            when (it) {
+                is SignUpSideEffect.Success -> {
+                    withContext(Dispatchers.Main) {
+                        navController.navigate(NavigationRoute.Main.MAIN) {
+                            popUpTo(0)
+                        }
+                    }
+                    toast.showSuccessToast(message = it.message)
+                }
 
-            is SignUpSideEffect.Failure -> {
-
+                is SignUpSideEffect.Failure -> {
+                    toast.showErrorToast(message = it.message)
+                }
             }
         }
     }
@@ -90,7 +100,7 @@ internal fun SignUpScreen(
             onValueChange = signUpViewModel::setAccountId,
             hint = {
                 Text(
-                    text = "아이디",
+                    text = "이메일",
                     style = DmsTheme.typography.body2,
                 )
             },
@@ -98,7 +108,7 @@ internal fun SignUpScreen(
             supportingText = {
                 if (state.emailError) {
                     Text(
-                        text = "존재하지 않는 아이디입니다.",
+                        text = "존재하지 않는 이메일입니다.",
                         style = DmsTheme.typography.body3,
                     )
                 }
