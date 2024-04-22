@@ -19,6 +19,7 @@ internal fun DevlibApp() {
         startDestination = NavigationRoute.Auth.route,
     ) {
         auth(navController = navController)
+        main(navController = navController)
     }
 }
 
@@ -32,11 +33,31 @@ private fun NavGraphBuilder.auth(navController: NavController) {
         }
 
         composable(route = NavigationRoute.Auth.SIGN_IN) {
-            SignInScreen(navController = navController)
+            SignInScreen(
+                navigateToMain = {
+                    navController.navigate(NavigationRoute.Main.MAIN) {
+                        popUpTo(0)
+                    }
+                },
+                navigateToSignUp = {
+                    navController.navigate(NavigationRoute.Auth.SIGN_UP)
+                }
+            )
         }
-        
+
         composable(route = NavigationRoute.Auth.SIGN_UP) {
             SignUpScreen(navController = navController)
+        }
+    }
+}
+
+private fun NavGraphBuilder.main(navController: NavController) {
+    navigation(
+        route = NavigationRoute.Main.route,
+        startDestination = NavigationRoute.Main.MAIN,
+    ) {
+        composable(route = NavigationRoute.Main.MAIN) {
+            RootScreen()
         }
     }
 }

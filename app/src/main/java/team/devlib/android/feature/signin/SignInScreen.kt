@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,12 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import team.aliens.dms.android.core.designsystem.LocalToast
 import team.aliens.dms.android.core.designsystem.TextField
-import team.devlib.android.NavigationRoute
 import team.devlib.android.R
 import team.devlib.designsystem.ui.ButtonDefaults
 import team.devlib.designsystem.ui.ContainedButton
@@ -42,7 +41,8 @@ import team.devlib.designsystem.ui.DmsTheme
 
 @Composable
 internal fun SignInScreen(
-    navController: NavController,
+    navigateToMain: () -> Unit,
+    navigateToSignUp: () -> Unit,
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val (email, onEmailChange) = remember { mutableStateOf("") }
@@ -52,16 +52,21 @@ internal fun SignInScreen(
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
 
-    viewModel.collectSideEffect {
-        when (it) {
-            is SignInSideEffect.Success -> {
-                toast.showSuccessToast(message = "성공적으로 로그인 되었습니다!")
-            }
+    LaunchedEffect(Unit) {
+        viewModel.collectSideEffect {
+            when (it) {
+                is SignInSideEffect.Success -> {
+                    withContext(Dispatchers.Main) {
+                        navigateToMain()
+                    }
+                    toast.showSuccessToast(message = "성공적으로 로그인 되었습니다!")
+                }
 
-            is SignInSideEffect.Failure -> {
-                it.message?.let { toast.showErrorToast(it) }
-                emailError = it.notFoundUser
-                passwordError = it.invalidPassword
+                is SignInSideEffect.Failure -> {
+                    it.message?.let { toast.showErrorToast(it) }
+                    emailError = it.notFoundUser
+                    passwordError = it.invalidPassword
+                }
             }
         }
     }
@@ -148,7 +153,7 @@ internal fun SignInScreen(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(12.dp)
-                .clickable{ navController.navigate(NavigationRoute.Auth.SIGN_UP) },
+                .clickable(onClick = navigateToSignUp),
             text = "회원가입",
             style = DmsTheme.typography.caption,
             color = DmsTheme.colorScheme.onSurfaceVariant,
@@ -180,6 +185,9 @@ internal fun SignInScreen(
 @Composable
 private fun SignInPreview() {
     DmsTheme {
-        SignInScreen(navController = rememberNavController())
+        SignInScreen(
+            navigateToMain = {},
+            navigateToSignUp = {},
+        )
     }
 }
