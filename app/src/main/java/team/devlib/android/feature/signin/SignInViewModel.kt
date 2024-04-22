@@ -8,7 +8,7 @@ import team.devlib.android.BaseViewModel
 import team.devlib.android.data.api.UserApi
 import team.devlib.android.data.di.NetworkModule
 import team.devlib.android.data.model.user.request.SignInRequest
-import team.devlib.android.data.model.user.response.SignInResponse
+import team.devlib.android.data.model.user.response.TokenResponse
 import team.devlib.android.domain.util.NotFoundException
 import team.devlib.android.domain.util.UnAuthorizedException
 import team.retum.network.util.RequestHandler
@@ -25,7 +25,7 @@ internal class SignInViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                RequestHandler<SignInResponse>().request {
+                RequestHandler<TokenResponse>().request {
                     userApi.signIn(
                         signInRequest = SignInRequest(
                             accountId = accountId,

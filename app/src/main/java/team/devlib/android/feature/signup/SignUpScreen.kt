@@ -14,10 +14,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,8 +28,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import team.aliens.dms.android.core.designsystem.LocalToast
 import team.aliens.dms.android.core.designsystem.TextField
 import team.devlib.android.NavigationRoute
 import team.devlib.android.R
@@ -40,15 +42,24 @@ import team.devlib.designsystem.ui.DmsTheme
 @Composable
 internal fun SignUpScreen(
     navController: NavController,
+    signUpViewModel: SignUpViewModel = hiltViewModel(),
 ) {
-    val (email, onEmailChange) = remember { mutableStateOf("") }
-    val (password, onPasswordChange) = remember { mutableStateOf("") }
-    val (passwordRepeat, onPasswordRepeatChange) = remember { mutableStateOf("") }
+    val toast = LocalToast.current
+    val state by signUpViewModel.state.collectAsState()
     val (visible, setVisible) = remember { mutableStateOf(false) }
     val (passwordRepeatVisible, setPasswordRepeatVisible) = remember { mutableStateOf(false) }
-    var emailError by remember { mutableStateOf(false) }
-    var passwordError by remember { mutableStateOf(false) }
-    var passwordRepeatError by remember { mutableStateOf(false) }
+
+    signUpViewModel.collectSideEffect {
+        when (it) {
+            is SignUpSideEffect.Success -> {
+                toast.showSuccessToast(message = it.message)
+            }
+
+            is SignUpSideEffect.Failure -> {
+
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -75,17 +86,17 @@ internal fun SignUpScreen(
         }
         Spacer(modifier = Modifier.height(60.dp))
         TextField(
-            value = email,
-            onValueChange = onEmailChange,
+            value = state.accountId,
+            onValueChange = signUpViewModel::setAccountId,
             hint = {
                 Text(
                     text = "아이디",
                     style = DmsTheme.typography.body2,
                 )
             },
-            isError = emailError,
+            isError = state.emailError,
             supportingText = {
-                if (emailError) {
+                if (state.emailError) {
                     Text(
                         text = "존재하지 않는 아이디입니다.",
                         style = DmsTheme.typography.body3,
@@ -95,15 +106,15 @@ internal fun SignUpScreen(
         )
         Spacer(modifier = Modifier.height(30.dp))
         TextField(
-            value = password,
-            onValueChange = onPasswordChange,
+            value = state.password,
+            onValueChange = signUpViewModel::setPassword,
             hint = {
                 Text(
                     text = "비밀번호",
                     style = DmsTheme.typography.body2,
                 )
             },
-            isError = passwordError,
+            isError = state.passwordError,
             trailingIcon = {
                 IconButton(
                     onClick = { setVisible(!visible) },
@@ -120,7 +131,7 @@ internal fun SignUpScreen(
             visualTransformation = if (visible) VisualTransformation.None
             else PasswordVisualTransformation(),
             supportingText = {
-                if (passwordError) {
+                if (state.passwordError) {
                     Text(
                         text = "잘못된 비밀번호입니다.",
                         style = DmsTheme.typography.body3,
@@ -130,15 +141,15 @@ internal fun SignUpScreen(
         )
         Spacer(modifier = Modifier.height(30.dp))
         TextField(
-            value = passwordRepeat,
-            onValueChange = onPasswordRepeatChange,
+            value = state.repeatPassword,
+            onValueChange = signUpViewModel::setRepeatPassword,
             hint = {
                 Text(
                     text = "비밀번호 확인",
                     style = DmsTheme.typography.body2,
                 )
             },
-            isError = passwordRepeatError,
+            isError = state.repeatPasswordError,
             trailingIcon = {
                 IconButton(
                     onClick = { setPasswordRepeatVisible(!passwordRepeatVisible) },
@@ -155,7 +166,7 @@ internal fun SignUpScreen(
             visualTransformation = if (passwordRepeatVisible) VisualTransformation.None
             else PasswordVisualTransformation(),
             supportingText = {
-                if (passwordRepeatError) {
+                if (state.repeatPasswordError) {
                     Text(
                         text = "비밀번호가 일치하지 않습니다.",
                         style = DmsTheme.typography.body3,
@@ -182,12 +193,7 @@ internal fun SignUpScreen(
                 .fillMaxWidth()
                 .imePadding()
                 .padding(bottom = 56.dp),
-            onClick = {
-                /*viewModel.signIn(
-                    accountId = email,
-                    password = password,
-                )*/
-            },
+            onClick = signUpViewModel::signUp,
             colors = ButtonDefaults.buttonColors(containerColor = DmsTheme.colorScheme.surfaceVariant),
         ) {
             Text(
