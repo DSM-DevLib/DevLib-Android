@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
-import team.devlib.android.NavigationRoute
+import team.devlib.android.navigation.NavigationRoute
 import team.devlib.android.R
 
 @Composable

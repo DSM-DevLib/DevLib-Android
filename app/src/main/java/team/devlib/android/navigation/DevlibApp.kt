@@ -1,4 +1,4 @@
-package team.devlib.android
+package team.devlib.android.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import team.devlib.android.feature.signin.SignInScreen
+import team.devlib.android.feature.signup.SignUpScreen
 import team.devlib.android.feature.splash.SplashScreen
 
 @Composable
@@ -18,6 +19,7 @@ internal fun DevlibApp() {
         startDestination = NavigationRoute.Auth.route,
     ) {
         auth(navController = navController)
+        main(navController = navController)
     }
 }
 
@@ -31,7 +33,31 @@ private fun NavGraphBuilder.auth(navController: NavController) {
         }
 
         composable(route = NavigationRoute.Auth.SIGN_IN) {
-            SignInScreen(navController = navController)
+            SignInScreen(
+                navigateToMain = {
+                    navController.navigate(NavigationRoute.Main.MAIN) {
+                        popUpTo(0)
+                    }
+                },
+                navigateToSignUp = {
+                    navController.navigate(NavigationRoute.Auth.SIGN_UP)
+                }
+            )
+        }
+
+        composable(route = NavigationRoute.Auth.SIGN_UP) {
+            SignUpScreen(navController = navController)
+        }
+    }
+}
+
+private fun NavGraphBuilder.main(navController: NavController) {
+    navigation(
+        route = NavigationRoute.Main.route,
+        startDestination = NavigationRoute.Main.MAIN,
+    ) {
+        composable(route = NavigationRoute.Main.MAIN) {
+            RootScreen()
         }
     }
 }

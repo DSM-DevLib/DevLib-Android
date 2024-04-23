@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
+import team.devlib.android.navigation.DevlibApp
 import team.devlib.designsystem.ui.DmsTheme
 
 @AndroidEntryPoint

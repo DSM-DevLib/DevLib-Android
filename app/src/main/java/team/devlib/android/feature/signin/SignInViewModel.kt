@@ -4,11 +4,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import team.devlib.android.BaseViewModel
+import team.devlib.android.base.BaseViewModel
 import team.devlib.android.data.api.UserApi
 import team.devlib.android.data.di.NetworkModule
 import team.devlib.android.data.model.user.request.SignInRequest
-import team.devlib.android.data.model.user.response.SignInResponse
+import team.devlib.android.data.model.user.response.TokenResponse
 import team.devlib.android.domain.util.NotFoundException
 import team.devlib.android.domain.util.UnAuthorizedException
 import team.retum.network.util.RequestHandler
@@ -25,7 +25,7 @@ internal class SignInViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                RequestHandler<SignInResponse>().request {
+                RequestHandler<TokenResponse>().request {
                     userApi.signIn(
                         signInRequest = SignInRequest(
                             accountId = accountId,
@@ -41,7 +41,7 @@ internal class SignInViewModel @Inject constructor(
                     SignInSideEffect.Failure(
                         notFoundUser = it is NotFoundException,
                         invalidPassword = it is UnAuthorizedException,
-                        message = it.message.toString(),
+                        message = it.message,
                     )
                 )
             }
@@ -54,6 +54,6 @@ internal sealed interface SignInSideEffect {
     data class Failure(
         val notFoundUser: Boolean,
         val invalidPassword: Boolean,
-        val message: String,
+        val message: String?,
     ) : SignInSideEffect
 }
