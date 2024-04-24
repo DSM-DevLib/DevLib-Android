@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    api(libs.io.coil.compose)
 
     api(libs.dagger.hilt.android)
     api(libs.androidx.hilt.navigation.compose)
