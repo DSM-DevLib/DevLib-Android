@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import team.devlib.android.component.DmsBottomAppBar
+import team.devlib.android.feature.mypage.MyPageScreen
 import team.devlib.android.navigation.NavigationRoute
 
 @Composable
@@ -33,7 +34,7 @@ internal fun RootScreen() {
             }
 
             composable(route = NavigationRoute.Root.PROFILE) {
-
+                MyPageScreen(navController = navHostController)
             }
         }
     }
