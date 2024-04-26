@@ -10,16 +10,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -29,24 +35,43 @@ import team.devlib.designsystem.ui.DmsTheme
 @Composable
 internal fun MyPageScreen(
     navController: NavController,
+    myPageViewModel: MyPageViewModel = hiltViewModel(),
 ) {
+    val state by myPageViewModel.state.collectAsState()
+
     Column(modifier = Modifier.fillMaxSize()) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = 42.dp,
+                    start = 16.dp,
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             AsyncImage(
-                model = "",
+                modifier = Modifier
+                    .size(52.dp)
+                    .clip(CircleShape),
+                model = "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
                 contentDescription = null,
+                contentScale = ContentScale.Crop,
             )
             Spacer(modifier = Modifier.width(18.dp))
             Text(
-                text = "",
+                text = state.name,
                 style = DmsTheme.typography.body2,
             )
         }
         Spacer(modifier = Modifier.height(30.dp))
-        Text(text = "북마크", style = DmsTheme.typography.body2)
+        Text(
+            modifier = Modifier.padding(start = 26.dp),
+            text = "북마크",
+            style = DmsTheme.typography.body2
+        )
         Spacer(modifier = Modifier.height(20.dp))
         LazyColumn {
-            
+
         }
     }
 }
