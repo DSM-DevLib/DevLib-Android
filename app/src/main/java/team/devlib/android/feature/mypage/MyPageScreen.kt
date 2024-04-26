@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -71,7 +72,14 @@ internal fun MyPageScreen(
         )
         Spacer(modifier = Modifier.height(20.dp))
         LazyColumn {
-
+            items(myPageViewModel.bookmarks) {
+                BookmarkItem(
+                    title = it.name,
+                    author = it.author,
+                    imageUrl = it.cover,
+                    isBookmarked = it.isMarked,
+                )
+            }
         }
     }
 }
