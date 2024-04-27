@@ -3,6 +3,8 @@ package team.devlib.android.feature.home
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,10 +24,12 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +49,7 @@ internal fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by homeViewModel.state.collectAsState()
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
@@ -60,7 +65,10 @@ internal fun HomeScreen(
             value = state.keyword,
             onValueChange = homeViewModel::onKeywordChange,
             hint = "검색어를 입력하세요",
-            onClick = {},
+            onClick = {
+                homeViewModel.searchBook()
+                focusManager.clearFocus()
+            },
         )
         Spacer(modifier = Modifier.height(36.dp))
         FilterButtons(
@@ -106,6 +114,11 @@ internal fun SearchBar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
+            modifier = Modifier.clickable(
+                indication = null,
+                onClick = onClick,
+                interactionSource = remember { MutableInteractionSource() },
+            ),
             painter = painterResource(id = R.drawable.ic_search),
             contentDescription = null,
             tint = DmsTheme.colorScheme.onSurfaceVariant,

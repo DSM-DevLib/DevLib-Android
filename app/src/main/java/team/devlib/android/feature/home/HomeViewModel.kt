@@ -43,8 +43,20 @@ internal class HomeViewModel @Inject constructor(
                 )
             }.onSuccess {
                 books.addAll(it.books)
-            }.onFailure {
+            }
+        }
+    }
 
+    internal fun searchBook() {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                bookApi.searchBook(
+                    token = NetworkModule.accessToken,
+                    name = state.value.keyword,
+                )
+            }.onSuccess {
+                books.clear()
+                books.addAll(it.books)
             }
         }
     }

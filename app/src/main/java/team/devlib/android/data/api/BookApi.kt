@@ -19,4 +19,10 @@ interface BookApi {
         @Header("Authorization") token: String,
         @Query("type") type: Type,
     ): FetchBookRankingResponse
+
+    @GET(RequestUrl.Book.book)
+    suspend fun searchBook(
+        @Header("Authorization") token: String,
+        @Query("name") name: String,
+    ): FetchBookRankingResponse
 }
