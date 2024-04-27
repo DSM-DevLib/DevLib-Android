@@ -9,5 +9,6 @@ sealed interface RequestUrl {
     data object Book: RequestUrl {
         const val book = "/book"
         const val mark = "$book/mark"
+        const val rank = "$book/rank"
     }
 }

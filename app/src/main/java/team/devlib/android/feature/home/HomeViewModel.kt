@@ -19,21 +19,28 @@ internal class HomeViewModel @Inject constructor(
     internal val books = mutableStateListOf<FetchBookRankingResponse.Book>()
 
     init {
-
+        fetchBookRanking()
     }
 
     internal fun onKeywordChange(keyword: String) = setState {
         state.value.copy(keyword = keyword)
     }
 
-    internal fun onTypeChange(type: Type) = setState {
-        state.value.copy(type = type)
+    internal fun onTypeChange(type: Type){
+        setState {
+            state.value.copy(type = type)
+        }
+        books.clear()
+        fetchBookRanking()
     }
 
-    internal fun fetchBookRanking() {
+    private fun fetchBookRanking() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                bookApi.fetchBookRanking(NetworkModule.accessToken)
+                bookApi.fetchBookRanking(
+                    token = NetworkModule.accessToken,
+                    type = state.value.type,
+                )
             }.onSuccess {
                 books.addAll(it.books)
             }.onFailure {
@@ -46,7 +53,7 @@ internal class HomeViewModel @Inject constructor(
 
 internal data class HomeState(
     val keyword: String = "",
-    val type: Type? = null,
+    val type: Type = Type.VIEW,
 )
 
 internal sealed interface HomeSideEffect {

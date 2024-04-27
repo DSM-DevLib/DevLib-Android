@@ -79,15 +79,6 @@ internal fun HomeScreen(
                     imageUrl = it.cover,
                 )
             }
-            /*item {
-                BookmarkItem(
-                    rank = 1,
-                    title = "title",
-                    author = "author",
-                    imageUrl = "https://www.github.com",
-                    isBookmarked = true,
-                )
-            }*/
         }
     }
 }
