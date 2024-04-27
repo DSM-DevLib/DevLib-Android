@@ -8,8 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import team.devlib.android.component.DmsBottomAppBar
+import team.devlib.android.feature.home.HomeScreen
 import team.devlib.android.feature.mypage.MyPageScreen
-import team.devlib.android.navigation.NavigationRoute
 
 @Composable
 internal fun RootScreen() {
@@ -26,7 +26,7 @@ internal fun RootScreen() {
             startDestination = NavigationRoute.Root.HOME,
         ) {
             composable(route = NavigationRoute.Root.HOME) {
-
+                HomeScreen(navController = navHostController)
             }
 
             composable(route = NavigationRoute.Root.QUESTION) {
