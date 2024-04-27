@@ -1,5 +1,7 @@
 package team.devlib.android.feature.mypage
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -30,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import team.aliens.dms.android.core.designsystem.shadow
 import team.devlib.android.R
 import team.devlib.designsystem.ui.DmsTheme
 
@@ -40,7 +44,11 @@ internal fun MyPageScreen(
 ) {
     val state by myPageViewModel.state.collectAsState()
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -71,7 +79,10 @@ internal fun MyPageScreen(
             style = DmsTheme.typography.body2
         )
         Spacer(modifier = Modifier.height(20.dp))
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+        ) {
             items(myPageViewModel.bookmarks) {
                 BookmarkItem(
                     title = it.name,
@@ -85,21 +96,34 @@ internal fun MyPageScreen(
 }
 
 @Composable
-private fun BookmarkItem(
+internal fun BookmarkItem(
+    rank: Int? = null,
     title: String,
     author: String,
     imageUrl: String,
-    isBookmarked: Boolean,
+    isBookmarked: Boolean? = null,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(6.dp),
+            )
+            .background(Color.White)
             .padding(
                 horizontal = 18.dp,
                 vertical = 8.dp,
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        rank?.run {
+            Text(
+                modifier = Modifier.padding(end = 8.dp),
+                text = this.toString(),
+                style = DmsTheme.typography.body3,
+            )
+        }
         Column {
             Text(
                 text = title,
@@ -120,16 +144,18 @@ private fun BookmarkItem(
             model = imageUrl,
             contentDescription = null,
         )
-        Spacer(modifier = Modifier.width(20.dp))
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                painter = painterResource(
-                    id = if (isBookmarked) R.drawable.ic_bookmark_on
-                    else R.drawable.ic_bookmark_off,
-                ),
-                contentDescription = null,
-                tint = DmsTheme.colorScheme.surfaceVariant,
-            )
+        isBookmarked?.run {
+            Spacer(modifier = Modifier.width(20.dp))
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    painter = painterResource(
+                        id = if (isBookmarked) R.drawable.ic_bookmark_on
+                        else R.drawable.ic_bookmark_off,
+                    ),
+                    contentDescription = null,
+                    tint = DmsTheme.colorScheme.surfaceVariant,
+                )
+            }
         }
     }
 }
