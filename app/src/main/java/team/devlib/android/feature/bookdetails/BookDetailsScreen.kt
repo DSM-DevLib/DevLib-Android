@@ -16,6 +16,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -38,7 +42,15 @@ import java.text.DecimalFormat
 internal fun BookDetailsScreen(
     bookId: Long,
     navController: NavController,
+    viewModel: BookDetailsViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsState()
+    val details = state.details
+    LaunchedEffect(Unit) {
+        viewModel.setId(bookId.toString())
+        viewModel.fetchBookDetails()
+    }
+
     Column {
         Header(
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -57,7 +69,7 @@ internal fun BookDetailsScreen(
                         width = 196.dp,
                         height = 278.dp,
                     ),
-                model = "",
+                model = details.cover,
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.height(26.dp))
@@ -67,24 +79,24 @@ internal fun BookDetailsScreen(
             ) {
                 Column {
                     Text(
-                        text = "title",
+                        text = details.name,
                         style = DmsTheme.typography.body2,
                     )
                     Text(
-                        text = "author",
+                        text = details.author,
                         style = DmsTheme.typography.overline,
                         color = Color(0xFF999999),
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "설명",
+                        text = details.description,
                         style = DmsTheme.typography.body3,
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     painter = painterResource(
-                        id = if (true) R.drawable.ic_bookmark_on
+                        id = if (details.isMarked) R.drawable.ic_bookmark_on
                         else R.drawable.ic_bookmark_off
                     ),
                     contentDescription = null,
@@ -115,7 +127,7 @@ internal fun BookDetailsScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Yes24",
+                        text = details.purchaseSite,
                         style = DmsTheme.typography.body3,
                     )
                     Spacer(modifier = Modifier.height(4.dp))

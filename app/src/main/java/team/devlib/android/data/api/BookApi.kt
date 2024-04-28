@@ -2,7 +2,9 @@ package team.devlib.android.data.api
 
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
+import team.devlib.android.data.model.book.FetchBookDetailsResponse
 import team.devlib.android.data.model.book.FetchBookRankingResponse
 import team.devlib.android.data.model.book.FetchMyBookmarksResponse
 import team.devlib.android.data.util.RequestUrl
@@ -25,4 +27,10 @@ interface BookApi {
         @Header("Authorization") token: String,
         @Query("name") name: String,
     ): FetchBookRankingResponse
+
+    @GET(RequestUrl.Book.details)
+    suspend fun fetchBookDetails(
+        @Header("Authorization") token: String,
+        @Path("book-id") bookId: Long,
+    ): FetchBookDetailsResponse
 }
