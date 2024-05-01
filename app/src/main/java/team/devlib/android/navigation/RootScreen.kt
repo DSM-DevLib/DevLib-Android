@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import team.devlib.android.component.DmsBottomAppBar
 import team.devlib.android.feature.home.HomeScreen
 import team.devlib.android.feature.mypage.MyPageScreen
+import team.devlib.android.feature.question.QuestionScreen
 
 @Composable
 internal fun RootScreen() {
@@ -30,7 +31,7 @@ internal fun RootScreen() {
             }
 
             composable(route = NavigationRoute.Root.QUESTION) {
-
+                QuestionScreen(navController = navHostController)
             }
 
             composable(route = NavigationRoute.Root.PROFILE) {
