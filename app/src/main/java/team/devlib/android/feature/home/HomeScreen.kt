@@ -54,12 +54,12 @@ internal fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .padding(
                 top = 24.dp,
                 start = 16.dp,
                 end = 16.dp,
-            )
-            .background(Color.White),
+            ),
     ) {
         SearchBar(
             value = state.keyword,

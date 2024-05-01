@@ -35,6 +35,24 @@ internal class BookDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    fun bookmark() {
+        setState {
+            state.value.copy(
+                details = state.value.details.copy(
+                    isMarked = !state.value.details.isMarked
+                )
+            )
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                bookApi.bookmark(
+                    token = NetworkModule.accessToken,
+                    bookId = state.value.id.toLong(),
+                )
+            }
+        }
+    }
 }
 
 internal data class BookDetailsState(

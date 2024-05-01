@@ -11,5 +11,6 @@ sealed interface RequestUrl {
         const val mark = "$book/mark"
         const val rank = "$book/rank"
         const val details = "$book/{book-id}"
+        const val bookmark = "$book/{book-id}/mark"
     }
 }

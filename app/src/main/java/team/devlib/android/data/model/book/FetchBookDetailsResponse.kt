@@ -2,7 +2,7 @@ package team.devlib.android.data.model.book
 
 import com.google.gson.annotations.SerializedName
 
-class FetchBookDetailsResponse(
+data class FetchBookDetailsResponse(
     val id: String,
     val name: String,
     val author: String,
