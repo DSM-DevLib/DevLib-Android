@@ -40,6 +40,7 @@ import team.devlib.designsystem.ui.ButtonDefaults
 import team.devlib.designsystem.ui.ContainedButton
 import team.devlib.designsystem.ui.DmsTheme
 import java.text.DecimalFormat
+import java.time.LocalDateTime
 
 @Composable
 internal fun BookDetailsScreen(
@@ -50,8 +51,9 @@ internal fun BookDetailsScreen(
     val state by viewModel.state.collectAsState()
     val details = state.details
     LaunchedEffect(Unit) {
-        viewModel.setId(bookId.toString())
+        viewModel.setId(bookId)
         viewModel.fetchBookDetails()
+        viewModel.fetchBookReviews()
     }
 
     Column {
@@ -204,7 +206,8 @@ internal fun BookDetailsScreen(
             }
             Spacer(modifier = Modifier.height(24.dp))
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                repeat(10) {
+                repeat(viewModel.reviews.size) {
+                    val element = viewModel.reviews[it]
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -221,25 +224,25 @@ internal fun BookDetailsScreen(
                     ) {
                         Row {
                             Text(
-                                text = "개발조아",
+                                text = element.name,
                                 style = DmsTheme.typography.caption,
                                 fontWeight = FontWeight.Bold,
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
-                                text = "2024.03.22",
+                                text = element.createdAt.split('T')[0],
                                 style = DmsTheme.typography.caption,
                                 fontWeight = FontWeight.Bold,
                             )
                         }
                         Text(
-                            text = "후기후기후기후기후기ㅜ기",
+                            text = element.content,
                             style = DmsTheme.typography.body3,
                         )
                         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            repeat(5) {
+                            repeat(element.score) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_star_off),
+                                    painter = painterResource(id = R.drawable.ic_star_on),
                                     contentDescription = null,
                                     tint = Color(0xFF999999),
                                 )

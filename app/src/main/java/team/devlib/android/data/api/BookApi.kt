@@ -7,6 +7,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import team.devlib.android.data.model.book.FetchBookDetailsResponse
 import team.devlib.android.data.model.book.FetchBookRankingResponse
+import team.devlib.android.data.model.book.FetchBookReviewsResponse
 import team.devlib.android.data.model.book.FetchMyBookmarksResponse
 import team.devlib.android.data.util.RequestUrl
 import team.devlib.android.feature.home.Type
@@ -40,4 +41,10 @@ interface BookApi {
         @Header("Authorization") token: String,
         @Path("book-id") bookId: Long,
     )
+
+    @GET(RequestUrl.Book.review)
+    suspend fun fetchBookReviews(
+        @Header("Authorization") token: String,
+        @Path("book-id") bookId: Long,
+    ): FetchBookReviewsResponse
 }

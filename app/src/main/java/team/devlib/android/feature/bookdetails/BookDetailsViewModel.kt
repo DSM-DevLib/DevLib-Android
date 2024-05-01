@@ -1,5 +1,7 @@
 package team.devlib.android.feature.bookdetails
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -8,6 +10,8 @@ import team.devlib.android.base.BaseViewModel
 import team.devlib.android.data.api.BookApi
 import team.devlib.android.data.di.NetworkModule
 import team.devlib.android.data.model.book.FetchBookDetailsResponse
+import team.devlib.android.data.model.book.FetchBookReviewsResponse
+import team.retum.network.util.RequestHandler
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,17 +19,21 @@ internal class BookDetailsViewModel @Inject constructor(
     private val bookApi: BookApi,
 ) : BaseViewModel<BookDetailsState, BookDetailsSideEffect>(BookDetailsState()) {
 
-    fun setId(id: String) = setState {
+    internal val reviews: SnapshotStateList<FetchBookReviewsResponse.Review> = mutableStateListOf()
+
+    fun setId(id: Long) = setState {
         state.value.copy(id = id)
     }
 
     fun fetchBookDetails() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                bookApi.fetchBookDetails(
-                    token = NetworkModule.accessToken,
-                    bookId = state.value.id.toLong(),
-                )
+                RequestHandler<FetchBookDetailsResponse>().request {
+                    bookApi.fetchBookDetails(
+                        token = NetworkModule.accessToken,
+                        bookId = state.value.id.toLong(),
+                    )
+                }
             }.onSuccess {
                 setState {
                     state.value.copy(details = it)
@@ -46,17 +54,35 @@ internal class BookDetailsViewModel @Inject constructor(
         }
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                bookApi.bookmark(
-                    token = NetworkModule.accessToken,
-                    bookId = state.value.id.toLong(),
-                )
+                RequestHandler<Unit>().request {
+                    bookApi.bookmark(
+                        token = NetworkModule.accessToken,
+                        bookId = state.value.id.toLong(),
+                    )
+                }
+            }
+        }
+    }
+
+    fun fetchBookReviews() {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                RequestHandler<FetchBookReviewsResponse>().request {
+                    bookApi.fetchBookReviews(
+                        token = NetworkModule.accessToken,
+                        bookId = state.value.id,
+                    )
+                }
+            }.onSuccess {
+                reviews.clear()
+                reviews.addAll(it.reviews)
             }
         }
     }
 }
 
 internal data class BookDetailsState(
-    val id: String = "",
+    val id: Long = 0L,
     val details: FetchBookDetailsResponse = FetchBookDetailsResponse(
         id = "",
         name = "",
