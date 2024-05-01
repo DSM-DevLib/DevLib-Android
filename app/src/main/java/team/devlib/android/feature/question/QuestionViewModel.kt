@@ -19,6 +19,10 @@ internal class QuestionViewModel @Inject constructor(
 
     internal val questions = mutableStateListOf<FetchQuestionsResponse.Question>()
 
+    init {
+        fetchQuestions()
+    }
+
     private fun fetchQuestions() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
