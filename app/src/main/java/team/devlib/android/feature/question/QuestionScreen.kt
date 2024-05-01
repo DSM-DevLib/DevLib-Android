@@ -22,12 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import team.aliens.dms.android.core.designsystem.shadow
 import team.devlib.android.feature.home.SearchBar
 import team.devlib.designsystem.ui.DmsTheme
 
 @Composable
-internal fun QuestionScreen() {
+internal fun QuestionScreen(
+    navController: NavController,
+) {
     val (question, onQuestionChange) = remember {
         mutableStateOf("")
     }
