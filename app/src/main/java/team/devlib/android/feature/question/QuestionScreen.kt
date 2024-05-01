@@ -1,6 +1,5 @@
 package team.devlib.android.feature.question
 
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,9 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import team.aliens.dms.android.core.designsystem.shadow
 import team.devlib.android.feature.home.SearchBar
@@ -30,7 +33,9 @@ import team.devlib.designsystem.ui.DmsTheme
 @Composable
 internal fun QuestionScreen(
     navController: NavController,
+    questionViewModel: QuestionViewModel = hiltViewModel(),
 ) {
+    val state by questionViewModel.state.collectAsState()
     val (question, onQuestionChange) = remember {
         mutableStateOf("")
     }
@@ -47,8 +52,8 @@ internal fun QuestionScreen(
             .background(Color.White),
     ) {
         SearchBar(
-            value = question,
-            onValueChange = onQuestionChange,
+            value = state.keyword,
+            onValueChange = questionViewModel::onKeywordChange,
             hint = "검색어를 입력하세요.",
             onClick = { focusManager.clearFocus() },
         )
@@ -56,8 +61,14 @@ internal fun QuestionScreen(
         LazyColumn(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(24.dp),
-        ){
-
+        ) {
+            items(questionViewModel.questions) {
+                QuestionItem(
+                    title = it.title,
+                    writer = it.username,
+                    date = it.createdDate,
+                )
+            }
         }
     }
 }

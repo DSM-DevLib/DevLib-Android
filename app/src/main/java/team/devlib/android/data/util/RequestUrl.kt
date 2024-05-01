@@ -11,4 +11,8 @@ sealed interface RequestUrl {
         const val mark = "$book/mark"
         const val rank = "$book/rank"
     }
+
+    data object Question: RequestUrl {
+        const val question = "/"
+    }
 }
