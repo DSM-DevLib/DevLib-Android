@@ -8,7 +8,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import team.devlib.android.data.api.BookApi
+import team.devlib.android.data.api.QuestionApi
 import team.devlib.android.data.api.UserApi
 import javax.inject.Singleton
 
@@ -66,5 +68,11 @@ object NetworkModule {
     @Singleton
     fun provideBookApi(retrofit: Retrofit): BookApi {
         return retrofit.create(BookApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuestionApi(retrofit: Retrofit): QuestionApi {
+        return retrofit.create(QuestionApi::class.java)
     }
 }
