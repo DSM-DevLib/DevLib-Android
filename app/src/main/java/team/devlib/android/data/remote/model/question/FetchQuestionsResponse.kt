@@ -1,4 +1,4 @@
-package team.devlib.android.data.model.question
+package team.devlib.android.data.remote.model.question
 
 import com.google.gson.annotations.SerializedName
 
