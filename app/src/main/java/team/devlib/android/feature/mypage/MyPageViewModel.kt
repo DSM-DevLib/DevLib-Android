@@ -7,12 +7,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
-import team.devlib.android.data.api.BookApi
-import team.devlib.android.data.api.UserApi
+import team.devlib.android.data.remote.api.BookApi
+import team.devlib.android.data.remote.api.UserApi
 import team.devlib.android.data.di.NetworkModule
-import team.devlib.android.data.model.book.FetchMyBookmarksResponse
-import team.devlib.android.data.model.user.response.UserInformationResponse
-import team.retum.network.util.RequestHandler
+import team.devlib.android.data.remote.model.book.FetchMyBookmarksResponse
+import team.devlib.android.data.remote.model.user.response.UserInformationResponse
+import team.devlib.android.data.util.RequestHandler
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +31,7 @@ internal class MyPageViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<UserInformationResponse>().request {
-                    userApi.fetchUserInformation(NetworkModule.accessToken)
+                    userApi.fetchUserInformation()
                 }
             }.onSuccess {
                 setState { state.value.copy(name = it.accountId) }
@@ -45,7 +45,7 @@ internal class MyPageViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<FetchMyBookmarksResponse>().request {
-                    bookApi.fetchMyBookmarks(NetworkModule.accessToken)
+                    bookApi.fetchMyBookmarks()
                 }
             }.onSuccess {
                 bookmarks.addAll(it.bookmarks)

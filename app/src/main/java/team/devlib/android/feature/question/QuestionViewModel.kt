@@ -6,9 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
-import team.devlib.android.data.api.QuestionApi
+import team.devlib.android.data.remote.api.QuestionApi
 import team.devlib.android.data.di.NetworkModule
-import team.devlib.android.data.model.question.FetchQuestionsResponse
+import team.devlib.android.data.remote.model.question.FetchQuestionsResponse
 import team.devlib.android.feature.home.Type
 import javax.inject.Inject
 
@@ -26,9 +26,7 @@ internal class QuestionViewModel @Inject constructor(
     private fun fetchQuestions() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                questionApi.fetchQuestions(
-                    token = NetworkModule.accessToken,
-                )
+                questionApi.fetchQuestions()
             }.onSuccess {
                 questions.addAll(it.questions)
             }
