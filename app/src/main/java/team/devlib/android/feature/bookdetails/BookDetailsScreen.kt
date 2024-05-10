@@ -82,7 +82,7 @@ internal fun BookDetailsScreen(
                 modifier = Modifier.padding(horizontal = 28.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = details.name,
                         style = DmsTheme.typography.body2,
@@ -98,13 +98,12 @@ internal fun BookDetailsScreen(
                         style = DmsTheme.typography.body3,
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     modifier = Modifier.clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = viewModel::bookmark,
-                    ),
+                    ).align(Alignment.Top),
                     painter = painterResource(
                         id = if (details.isMarked) R.drawable.ic_bookmark_on
                         else R.drawable.ic_bookmark_off
