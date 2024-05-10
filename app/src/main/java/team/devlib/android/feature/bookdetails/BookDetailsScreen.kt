@@ -21,7 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +42,6 @@ import team.devlib.designsystem.ui.ButtonDefaults
 import team.devlib.designsystem.ui.ContainedButton
 import team.devlib.designsystem.ui.DmsTheme
 import java.text.DecimalFormat
-import java.time.LocalDateTime
 
 @Composable
 internal fun BookDetailsScreen(
@@ -50,6 +51,8 @@ internal fun BookDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val details = state.details
+    var star by remember { mutableIntStateOf(0) }
+
     LaunchedEffect(Unit) {
         viewModel.setId(bookId)
         viewModel.fetchBookDetails()
@@ -99,11 +102,13 @@ internal fun BookDetailsScreen(
                     )
                 }
                 Icon(
-                    modifier = Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = viewModel::bookmark,
-                    ).align(Alignment.Top),
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = viewModel::bookmark,
+                        )
+                        .align(Alignment.Top),
                     painter = painterResource(
                         id = if (details.isMarked) R.drawable.ic_bookmark_on
                         else R.drawable.ic_bookmark_off
@@ -185,7 +190,15 @@ internal fun BookDetailsScreen(
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     repeat(5) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_star_off),
+                            modifier = Modifier.clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = { star = it + 1 }
+                            ),
+                            painter = painterResource(
+                                id = if (star - 1 >= it) R.drawable.ic_star_on
+                                else R.drawable.ic_star_off,
+                            ),
                             contentDescription = null,
                             tint = Color(0xFF999999),
                         )
@@ -194,11 +207,14 @@ internal fun BookDetailsScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "2점",
+                        text = "${
+                            viewModel.reviews.sumOf { it.score }
+                                .div(if (viewModel.reviews.size == 0) 1 else viewModel.reviews.size)
+                        }점",
                         style = DmsTheme.typography.body3,
                     )
                     Text(
-                        text = "후기 2명",
+                        text = "후기 ${viewModel.reviews.size}명",
                         color = Color(0xFF999999)
                     )
                 }
