@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import team.aliens.dms.android.core.designsystem.shadow
 import team.devlib.android.R
 import team.devlib.android.feature.mypage.BookmarkItem
+import team.devlib.android.navigation.NavigationRoute
 import team.devlib.designsystem.ui.ButtonDefaults
 import team.devlib.designsystem.ui.DmsTheme
 import team.devlib.designsystem.ui.OutlinedButton
@@ -82,6 +83,8 @@ internal fun HomeScreen(
         ) {
             items(homeViewModel.books) {
                 BookmarkItem(
+                    id = it.id,
+                    onClick = { navController.navigate("${NavigationRoute.Main.BOOK_DETAILS}/$it") },
                     title = it.name,
                     author = it.author,
                     imageUrl = it.cover,
@@ -103,7 +106,7 @@ internal fun SearchBar(
             .fillMaxWidth()
             .shadow(
                 elevation = 4.dp,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
             )
             .background(Color.White)
             .clip(RoundedCornerShape(20.dp))
