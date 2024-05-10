@@ -47,4 +47,10 @@ interface BookApi {
         @Header("Authorization") token: String,
         @Path("book-id") bookId: Long,
     ): FetchBookReviewsResponse
+
+    @POST(RequestUrl.Book.review)
+    suspend fun postReview(
+        @Header("Authorization") token: String,
+        @Path("book-id") bookId: Long,
+    )
 }

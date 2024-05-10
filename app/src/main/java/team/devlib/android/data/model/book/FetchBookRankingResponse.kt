@@ -7,7 +7,7 @@ data class FetchBookRankingResponse(
 ) {
     data class Book(
         val rank: Int,
-        val id: String,
+        val id: Long,
         val name: String,
         val author: String,
         val cover: String,

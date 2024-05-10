@@ -57,7 +57,7 @@ internal class BookDetailsViewModel @Inject constructor(
                 RequestHandler<Unit>().request {
                     bookApi.bookmark(
                         token = NetworkModule.accessToken,
-                        bookId = state.value.id.toLong(),
+                        bookId = state.value.id,
                     )
                 }
             }
@@ -79,6 +79,23 @@ internal class BookDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    fun postReview() {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                RequestHandler<Unit>().request {
+                    bookApi.postReview(
+                        token = NetworkModule.accessToken,
+                        bookId = state.value.id,
+                    )
+                }
+            }.onSuccess {
+                postSideEffect(BookDetailsSideEffect.Success)
+            }.onFailure {
+
+            }
+        }
+    }
 }
 
 internal data class BookDetailsState(
@@ -97,5 +114,5 @@ internal data class BookDetailsState(
 )
 
 internal sealed interface BookDetailsSideEffect {
-
+    data object Success : BookDetailsSideEffect
 }
