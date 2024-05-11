@@ -1,4 +1,4 @@
-package team.devlib.android.data.model.book
+package team.devlib.android.data.remote.model.book
 
 import com.google.gson.annotations.SerializedName
 

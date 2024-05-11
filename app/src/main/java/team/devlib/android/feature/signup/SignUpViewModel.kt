@@ -5,17 +5,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
-import team.devlib.android.data.api.UserApi
+import team.devlib.android.data.remote.api.UserApi
 import team.devlib.android.data.di.NetworkModule
-import team.devlib.android.data.model.user.request.SignUpRequest
-import team.devlib.android.data.model.user.response.TokenResponse
+import team.devlib.android.data.local.storage.AuthDataStorage
+import team.devlib.android.data.remote.model.user.request.SignUpRequest
+import team.devlib.android.data.remote.model.user.response.TokenResponse
 import team.devlib.android.domain.util.ConflictException
-import team.retum.network.util.RequestHandler
+import team.devlib.android.data.util.RequestHandler
 import javax.inject.Inject
 
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
     private val userApi: UserApi,
+    private val authDataStorage: AuthDataStorage
 ) : BaseViewModel<SignUpState, SignUpSideEffect>(SignUpState.getInitialState()) {
 
     fun signUp() {
@@ -31,7 +33,7 @@ internal class SignUpViewModel @Inject constructor(
                         )
                     }
                 }.onSuccess {
-                    NetworkModule.accessToken = it.accessToken
+                    authDataStorage.setAccessToken(it.accessToken)
                     postSideEffect(SignUpSideEffect.Success("성공적으로 회원가입 되었습니다!"))
                 }.onFailure {
                     when (it) {

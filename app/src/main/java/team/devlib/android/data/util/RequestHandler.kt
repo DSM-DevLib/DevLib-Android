@@ -1,4 +1,4 @@
-package team.retum.network.util
+package team.devlib.android.data.util
 
 import retrofit2.HttpException
 import team.devlib.android.domain.util.BadRequestException
