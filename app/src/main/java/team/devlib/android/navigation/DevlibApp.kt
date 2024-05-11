@@ -3,10 +3,13 @@ package team.devlib.android.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import team.devlib.android.feature.bookdetails.BookDetailsScreen
 import team.devlib.android.feature.signin.SignInScreen
 import team.devlib.android.feature.signup.SignUpScreen
 import team.devlib.android.feature.splash.SplashScreen
@@ -57,7 +60,23 @@ private fun NavGraphBuilder.main(navController: NavController) {
         startDestination = NavigationRoute.Main.MAIN,
     ) {
         composable(route = NavigationRoute.Main.MAIN) {
-            RootScreen()
+            RootScreen(navController = navController)
+        }
+
+        composable(
+            route = "${NavigationRoute.Main.BOOK_DETAILS}/${NavigationRoute.Arguments.BOOK_ID}",
+            arguments = listOf(
+                navArgument(
+                    name = "book-id",
+                    builder = { type = NavType.LongType },
+                ),
+            ),
+        ) {
+            val bookId = it.arguments?.getLong("book-id") ?: 0L
+            BookDetailsScreen(
+                bookId = bookId,
+                navController = navController,
+            )
         }
     }
 }

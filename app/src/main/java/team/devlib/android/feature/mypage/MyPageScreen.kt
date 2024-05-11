@@ -1,6 +1,8 @@
 package team.devlib.android.feature.mypage
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import team.aliens.dms.android.core.designsystem.shadow
 import team.devlib.android.R
+import team.devlib.android.navigation.NavigationRoute
 import team.devlib.designsystem.ui.DmsTheme
 
 @Composable
@@ -85,6 +89,8 @@ internal fun MyPageScreen(
         ) {
             items(myPageViewModel.bookmarks) {
                 BookmarkItem(
+                    id = it.id,
+                    onClick = { navController.navigate("${NavigationRoute.Main.BOOK_DETAILS}/{$it}") },
                     title = it.name,
                     author = it.author,
                     imageUrl = it.cover,
@@ -97,6 +103,8 @@ internal fun MyPageScreen(
 
 @Composable
 internal fun BookmarkItem(
+    onClick: (bookId: Long) -> Unit,
+    id: Long,
     rank: Int? = null,
     title: String,
     author: String,
@@ -109,6 +117,11 @@ internal fun BookmarkItem(
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(6.dp),
+            )
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = { onClick(id) }
             )
             .background(Color.White)
             .padding(
@@ -164,7 +177,12 @@ internal fun BookmarkItem(
 @Composable
 private fun BookmarkItemPreview() {
     BookmarkItem(
-        title = "클린 아키텍처", author = "저자 최하은", imageUrl = "ㅁㅇㄴㄹ", isBookmarked = false
+        title = "클린 아키텍처",
+        author = "저자 최하은",
+        imageUrl = "ㅁㅇㄴㄹ",
+        isBookmarked = false,
+        onClick = {},
+        id = 0L,
     )
 }
 
