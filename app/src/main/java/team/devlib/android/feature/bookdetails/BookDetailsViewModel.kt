@@ -7,11 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
-import team.devlib.android.data.api.BookApi
 import team.devlib.android.data.di.NetworkModule
 import team.devlib.android.data.model.book.FetchBookDetailsResponse
 import team.devlib.android.data.model.book.FetchBookReviewsResponse
-import team.retum.network.util.RequestHandler
+import team.devlib.android.data.remote.api.BookApi
+import team.devlib.android.data.util.RequestHandler
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,10 +29,7 @@ internal class BookDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<FetchBookDetailsResponse>().request {
-                    bookApi.fetchBookDetails(
-                        token = NetworkModule.accessToken,
-                        bookId = state.value.id.toLong(),
-                    )
+                    bookApi.fetchBookDetails(bookId = state.value.id)
                 }
             }.onSuccess {
                 setState {
@@ -55,10 +52,7 @@ internal class BookDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<Unit>().request {
-                    bookApi.bookmark(
-                        token = NetworkModule.accessToken,
-                        bookId = state.value.id,
-                    )
+                    bookApi.bookmark(bookId = state.value.id)
                 }
             }
         }
@@ -68,10 +62,7 @@ internal class BookDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<FetchBookReviewsResponse>().request {
-                    bookApi.fetchBookReviews(
-                        token = NetworkModule.accessToken,
-                        bookId = state.value.id,
-                    )
+                    bookApi.fetchBookReviews(bookId = state.value.id)
                 }
             }.onSuccess {
                 reviews.clear()
@@ -84,10 +75,7 @@ internal class BookDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<Unit>().request {
-                    bookApi.postReview(
-                        token = NetworkModule.accessToken,
-                        bookId = state.value.id,
-                    )
+                    bookApi.postReview(bookId = state.value.id)
                 }
             }.onSuccess {
                 postSideEffect(BookDetailsSideEffect.Success)
