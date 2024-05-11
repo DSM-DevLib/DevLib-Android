@@ -1,4 +1,4 @@
-package team.devlib.android.data.model.user.response
+package team.devlib.android.data.remote.model.user.response
 
 import com.google.gson.annotations.SerializedName
 

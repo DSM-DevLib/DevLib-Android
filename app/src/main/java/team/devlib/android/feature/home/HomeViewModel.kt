@@ -6,9 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
-import team.devlib.android.data.api.BookApi
+import team.devlib.android.data.remote.api.BookApi
 import team.devlib.android.data.di.NetworkModule
-import team.devlib.android.data.model.book.FetchBookRankingResponse
+import team.devlib.android.data.remote.model.book.FetchBookRankingResponse
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +26,7 @@ internal class HomeViewModel @Inject constructor(
         state.value.copy(keyword = keyword)
     }
 
-    internal fun onTypeChange(type: Type){
+    internal fun onTypeChange(type: Type) {
         setState {
             state.value.copy(type = type)
         }
@@ -37,10 +37,7 @@ internal class HomeViewModel @Inject constructor(
     private fun fetchBookRanking() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                bookApi.fetchBookRanking(
-                    token = NetworkModule.accessToken,
-                    type = state.value.type,
-                )
+                bookApi.fetchBookRanking(type = state.value.type)
             }.onSuccess {
                 books.addAll(it.books)
             }
@@ -50,10 +47,7 @@ internal class HomeViewModel @Inject constructor(
     internal fun searchBook() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                bookApi.searchBook(
-                    token = NetworkModule.accessToken,
-                    name = state.value.keyword,
-                )
+                bookApi.searchBook(name = state.value.keyword)
             }.onSuccess {
                 books.clear()
                 books.addAll(it.books)
