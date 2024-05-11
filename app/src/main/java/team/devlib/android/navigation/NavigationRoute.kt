@@ -16,6 +16,7 @@ sealed class NavigationRoute(val route: String) {
     data object Main : NavigationRoute(route = "/main") {
         val MAIN = "$route/root"
         val BOOK_DETAILS = "$route/details"
+        val POST_REVIEW = "$route/postReview"
     }
 
     data object Arguments {

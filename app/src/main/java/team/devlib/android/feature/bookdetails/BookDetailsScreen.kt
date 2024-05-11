@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import team.aliens.dms.android.core.designsystem.shadow
 import team.devlib.android.R
+import team.devlib.android.navigation.NavigationRoute
 import team.devlib.designsystem.ui.ButtonDefaults
 import team.devlib.designsystem.ui.ContainedButton
 import team.devlib.designsystem.ui.DmsTheme
@@ -165,7 +166,15 @@ internal fun BookDetailsScreen(
                 }
             }
             Spacer(modifier = Modifier.height(38.dp))
-            Row(modifier = Modifier.padding(horizontal = 24.dp)) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = { navController.navigate("${NavigationRoute.Main.POST_REVIEW}/${bookId}") }
+                    )
+            ) {
                 Text(
                     text = "후기",
                     style = DmsTheme.typography.body2,
@@ -273,6 +282,7 @@ internal fun BookDetailsScreen(
 @Composable
 internal fun Header(
     modifier: Modifier = Modifier,
+    title: String? = null,
     onClick: () -> Unit,
 ) {
     Row(
@@ -285,6 +295,11 @@ internal fun Header(
         Icon(
             painter = painterResource(id = R.drawable.ic_arrow_back),
             contentDescription = null,
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = title ?: "",
+            style = DmsTheme.typography.body2,
         )
     }
 }
