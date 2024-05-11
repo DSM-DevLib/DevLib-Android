@@ -1,5 +1,6 @@
 package team.devlib.android.feature.review
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -23,9 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import team.aliens.dms.android.core.designsystem.TextField
 import team.devlib.android.R
@@ -38,9 +42,27 @@ import team.devlib.designsystem.ui.DmsTheme
 internal fun PostReviewScreen(
     navController: NavController,
     bookId: Long,
+    viewModel: PostReviewViewModel = hiltViewModel(),
 ) {
     var review by remember { mutableStateOf("") }
     var star by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collect {
+            when (it) {
+                is PostReviewSideEffect.Success -> {
+                    Toast.makeText(context, "리뷰가 성공적으로 등록되었습니다!", Toast.LENGTH_SHORT).show()
+                    navController.popBackStack()
+                }
+
+                is PostReviewSideEffect.Failure -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,8 +109,12 @@ internal fun PostReviewScreen(
                 .imePadding()
                 .padding(bottom = 56.dp),
             onClick = {
-
+                viewModel.postReview(
+                    review = review,
+                    bookId = bookId,
+                )
             },
+            enabled = review.isNotEmpty(),
             colors = ButtonDefaults.buttonColors(containerColor = DmsTheme.colorScheme.surfaceVariant),
         ) {
             Text(
