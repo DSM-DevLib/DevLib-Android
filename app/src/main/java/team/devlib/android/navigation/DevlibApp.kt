@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import team.devlib.android.feature.bookdetails.BookDetailsScreen
+import team.devlib.android.feature.question.QuestionDetailsScreen
 import team.devlib.android.feature.signin.SignInScreen
 import team.devlib.android.feature.signup.SignUpScreen
 import team.devlib.android.feature.splash.SplashScreen
@@ -61,6 +62,22 @@ private fun NavGraphBuilder.main(navController: NavController) {
     ) {
         composable(route = NavigationRoute.Main.MAIN) {
             RootScreen(navController = navController)
+        }
+
+        composable(
+            route = "${NavigationRoute.Main.QUESTION_DETAILS}/${NavigationRoute.Arguments.QUESTION_ID}",
+            arguments = listOf(
+                navArgument(
+                    name = "question-id",
+                    builder = { type = NavType.LongType },
+                ),
+            ),
+        ) {
+            val questionId = it.arguments?.getLong("question-id") ?: 0L
+            QuestionDetailsScreen(
+                navController = navController,
+                questionId = questionId,
+            )
         }
 
         composable(
