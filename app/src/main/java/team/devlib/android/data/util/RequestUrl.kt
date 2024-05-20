@@ -16,6 +16,7 @@ sealed interface RequestUrl {
     }
 
     data object Question: RequestUrl {
-        const val question = "/"
+        const val question = "/question"
+        const val details = "$question/{question-id}"
     }
 }

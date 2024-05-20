@@ -15,10 +15,12 @@ sealed class NavigationRoute(val route: String) {
 
     data object Main : NavigationRoute(route = "/main") {
         val MAIN = "$route/root"
-        val BOOK_DETAILS = "$route/details"
+        val BOOK_DETAILS = "$route/book/details"
+        val QUESTION_DETAILS = "$route/question/details"
     }
 
     data object Arguments {
         val BOOK_ID = "{book-id}"
+        val QUESTION_ID = "{question-id]"
     }
 }
