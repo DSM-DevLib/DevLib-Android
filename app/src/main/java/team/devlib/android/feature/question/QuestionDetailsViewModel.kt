@@ -5,7 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
-import team.devlib.android.data.model.book.FetchBookDetailsResponse
 import team.devlib.android.data.remote.api.QuestionApi
 import team.devlib.android.data.remote.model.question.FetchQuestionDetailsResponse
 import team.devlib.android.data.util.RequestHandler
