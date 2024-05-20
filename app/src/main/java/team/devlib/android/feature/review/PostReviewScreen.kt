@@ -71,7 +71,7 @@ internal fun PostReviewScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Header(title = "후기 작성하기") {
-
+            navController.popBackStack()
         }
         Spacer(modifier = Modifier.height(20.dp))
         TextField(

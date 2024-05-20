@@ -12,7 +12,6 @@ import team.devlib.designsystem.ui.DmsTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             DmsTheme(darkTheme = false) {
                 DevlibApp()
