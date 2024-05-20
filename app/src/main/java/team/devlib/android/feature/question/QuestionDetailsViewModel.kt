@@ -1,5 +1,7 @@
 package team.devlib.android.feature.question
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +16,9 @@ import javax.inject.Inject
 internal class QuestionDetailsViewModel @Inject constructor(
     private val questionApi: QuestionApi,
 ) : BaseViewModel<QuestionDetailsState, QuestionDetailsSideEffect>(QuestionDetailsState()) {
+
+    internal val replies: SnapshotStateList<FetchQuestionDetailsResponse.Reply> =
+        mutableStateListOf()
 
     fun setId(id: Long) = setState {
         state.value.copy(id = id)
@@ -42,6 +47,7 @@ internal data class QuestionDetailsState(
         title = "",
         content = "",
         author = "",
+        replyList = listOf(),
     ),
 )
 
