@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -118,7 +119,7 @@ internal fun BookDetailsScreen(
                 )
             }
             Spacer(modifier = Modifier.height(26.dp))
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp)
@@ -142,27 +143,35 @@ internal fun BookDetailsScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
+                        modifier = Modifier,
                         text = details.purchaseSite,
                         style = DmsTheme.typography.body3,
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = DecimalFormat("#,###").format(24000),
-                        style = DmsTheme.typography.body3,
-                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                ContainedButton(
-                    modifier = Modifier.align(Alignment.Bottom),
-                    onClick = {},
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF555555))
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = "바로가기",
+                        text = DecimalFormat("#,###").format(details.price).plus("원"),
                         style = DmsTheme.typography.body3,
                         fontWeight = FontWeight.Bold,
                     )
+                    ContainedButton(
+                        modifier = Modifier.align(Alignment.Bottom),
+                        onClick = {},
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF555555))
+                    ) {
+                        Text(
+                            text = "바로가기",
+                            style = DmsTheme.typography.body3,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(38.dp))

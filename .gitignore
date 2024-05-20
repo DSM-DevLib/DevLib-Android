@@ -594,3 +594,7 @@ buildSrc/.gradle/buildOutputCleanup/cache.properties
 .gradle/8.2/dependencies-accessors/29d52f00e8d69a61caa9cb112558fe79a89c5a8a/sources/org/gradle/accessors/dm/LibrariesForLibs.java
 
 .gradle/8.2/dependencies-accessors/29d52f00e8d69a61caa9cb112558fe79a89c5a8a/sources/org/gradle/accessors/dm/LibrariesForLibsInPluginsBlock.java
+
+.idea/appInsightsSettings.xml
+
+.idea/deploymentTargetSelector.xml
