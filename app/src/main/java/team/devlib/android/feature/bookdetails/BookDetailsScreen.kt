@@ -1,5 +1,9 @@
 package team.devlib.android.feature.bookdetails
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -53,12 +57,18 @@ internal fun BookDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val details = state.details
-    var star by remember { mutableIntStateOf(0) }
+    var point by remember { mutableIntStateOf(0) }
+    val activityResultLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+
+        }
 
     LaunchedEffect(Unit) {
-        viewModel.setId(bookId)
-        viewModel.fetchBookDetails()
-        viewModel.fetchBookReviews()
+        with(viewModel) {
+            setId(bookId)
+            fetchBookDetails()
+            fetchBookReviews()
+        }
     }
 
     Column {
@@ -163,7 +173,10 @@ internal fun BookDetailsScreen(
                     )
                     ContainedButton(
                         modifier = Modifier.align(Alignment.Bottom),
-                        onClick = {},
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(details.purchaseSite))
+                            activityResultLauncher.launch(intent)
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF555555))
                     ) {
                         Text(
@@ -211,10 +224,10 @@ internal fun BookDetailsScreen(
                             modifier = Modifier.clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() },
-                                onClick = { star = it + 1 }
+                                onClick = { point = it + 1 }
                             ),
                             painter = painterResource(
-                                id = if (star - 1 >= it) R.drawable.ic_star_on
+                                id = if (point - 1 >= it) R.drawable.ic_star_on
                                 else R.drawable.ic_star_off,
                             ),
                             contentDescription = null,
