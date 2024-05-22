@@ -44,8 +44,8 @@ internal fun PostReviewScreen(
     bookId: Long,
     viewModel: PostReviewViewModel = hiltViewModel(),
 ) {
-    var review by remember { mutableStateOf("") }
-    var star by remember { mutableIntStateOf(0) }
+    var content by remember { mutableStateOf("") }
+    var point by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -75,8 +75,8 @@ internal fun PostReviewScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            value = review,
-            onValueChange = { review = it },
+            value = content,
+            onValueChange = { content = it },
             hint = {
                 Text(
                     text = "후기를 작성하세요",
@@ -91,10 +91,10 @@ internal fun PostReviewScreen(
                     modifier = Modifier.clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
-                        onClick = { star = it + 1 }
+                        onClick = { point = it + 1 }
                     ),
                     painter = painterResource(
-                        id = if (star - 1 >= it) R.drawable.ic_star_on
+                        id = if (point - 1 >= it) R.drawable.ic_star_on
                         else R.drawable.ic_star_off,
                     ),
                     contentDescription = null,
@@ -110,11 +110,12 @@ internal fun PostReviewScreen(
                 .padding(bottom = 56.dp),
             onClick = {
                 viewModel.postReview(
-                    review = review,
                     bookId = bookId,
+                    point = point,
+                    content = content,
                 )
             },
-            enabled = review.isNotEmpty(),
+            enabled = content.isNotEmpty(),
             colors = ButtonDefaults.buttonColors(containerColor = DmsTheme.colorScheme.surfaceVariant),
         ) {
             Text(

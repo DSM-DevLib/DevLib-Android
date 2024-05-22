@@ -302,6 +302,11 @@ internal fun Header(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
+            modifier = Modifier.clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onClick,
+            ),
             painter = painterResource(id = R.drawable.ic_arrow_back),
             contentDescription = null,
         )
