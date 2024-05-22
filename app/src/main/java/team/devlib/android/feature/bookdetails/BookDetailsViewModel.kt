@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
-import team.devlib.android.data.di.NetworkModule
 import team.devlib.android.data.model.book.FetchBookDetailsResponse
 import team.devlib.android.data.model.book.FetchBookReviewsResponse
 import team.devlib.android.data.remote.api.BookApi
@@ -17,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class BookDetailsViewModel @Inject constructor(
     private val bookApi: BookApi,
-) : BaseViewModel<BookDetailsState, BookDetailsSideEffect>(BookDetailsState()) {
+) : BaseViewModel<BookDetailsState, Unit>(BookDetailsState()) {
 
     internal val reviews: SnapshotStateList<FetchBookReviewsResponse.Review> = mutableStateListOf()
 
@@ -70,20 +69,6 @@ internal class BookDetailsViewModel @Inject constructor(
             }
         }
     }
-
-    fun postReview() {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                RequestHandler<Unit>().request {
-                    bookApi.postReview(bookId = state.value.id)
-                }
-            }.onSuccess {
-                postSideEffect(BookDetailsSideEffect.Success)
-            }.onFailure {
-
-            }
-        }
-    }
 }
 
 internal data class BookDetailsState(
@@ -100,7 +85,3 @@ internal data class BookDetailsState(
         isMarked = false,
     )
 )
-
-internal sealed interface BookDetailsSideEffect {
-    data object Success : BookDetailsSideEffect
-}
