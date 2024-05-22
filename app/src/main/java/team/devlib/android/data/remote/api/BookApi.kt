@@ -41,9 +41,4 @@ interface BookApi {
     suspend fun fetchBookReviews(
         @Path("book-id") bookId: Long,
     ): FetchBookReviewsResponse
-
-    @POST(RequestUrl.Book.review)
-    suspend fun postReview(
-        @Path("book-id") bookId: Long,
-    )
 }
