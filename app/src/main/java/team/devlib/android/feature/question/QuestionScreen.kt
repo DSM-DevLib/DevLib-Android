@@ -1,6 +1,7 @@
 package team.devlib.android.feature.question
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +18,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -47,12 +47,12 @@ internal fun QuestionScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .padding(
                 top = 24.dp,
                 start = 16.dp,
                 end = 16.dp,
-            )
-            .background(Color.White),
+            ),
     ) {
         SearchBar(
             value = state.keyword,
@@ -67,9 +67,11 @@ internal fun QuestionScreen(
         ) {
             items(questionViewModel.questions) {
                 QuestionItem(
+                    questionId = it.questionId,
                     title = it.title,
                     writer = it.username,
-                    date = it.createdDate,
+                    date = it.createdDate.split('T')[0],
+                    onClick = { navController.navigate("${NavigationRoute.Main.QUESTION_DETAILS}/$it") }
                 )
             }
         }
@@ -91,13 +93,16 @@ internal fun QuestionScreen(
 
 @Composable
 private fun QuestionItem(
+    questionId: Long,
     title: String,
     writer: String,
     date: String,
+    onClick: (questionId: Long) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick(questionId) }
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(6.dp),

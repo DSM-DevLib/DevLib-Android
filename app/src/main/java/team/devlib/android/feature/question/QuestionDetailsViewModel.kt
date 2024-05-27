@@ -39,6 +39,16 @@ internal class QuestionDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteQuestion() {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                questionApi.deleteQuestion(questionId = state.value.id)
+            }.onSuccess {
+                postSideEffect(QuestionDetailsSideEffect.DeleteSuccess)
+            }
+        }
+    }
 }
 
 internal data class QuestionDetailsState(
@@ -49,15 +59,17 @@ internal data class QuestionDetailsState(
         likeCount = 0,
         content = "",
         bookId = 0L,
+        mine = false,
     ),
     val details: FetchQuestionDetailsResponse = FetchQuestionDetailsResponse(
         title = "",
         content = "",
         author = "",
+        mine = false,
         replyList = listOf(replies),
     ),
 )
 
 internal sealed interface QuestionDetailsSideEffect {
-    data object Success : QuestionDetailsSideEffect
+    data object DeleteSuccess : QuestionDetailsSideEffect
 }

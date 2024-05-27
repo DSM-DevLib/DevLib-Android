@@ -6,8 +6,9 @@ data class FetchQuestionsResponse(
     @SerializedName("questions") val questions: List<Question>
 ) {
     data class Question(
+        @SerializedName("question_id") val questionId: Long,
         val username: String,
         val title: String,
-        val createdDate: String,
+        @SerializedName("created_date") val createdDate: String,
     )
 }

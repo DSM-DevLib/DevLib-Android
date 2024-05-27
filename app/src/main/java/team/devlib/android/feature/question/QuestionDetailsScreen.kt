@@ -1,6 +1,7 @@
 package team.devlib.android.feature.question
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +31,7 @@ import androidx.navigation.NavController
 import team.aliens.dms.android.core.designsystem.shadow
 import team.devlib.android.R
 import team.devlib.android.feature.bookdetails.Header
+import team.devlib.android.navigation.NavigationRoute
 import team.devlib.designsystem.ui.DmsTheme
 
 @Composable
@@ -42,6 +46,13 @@ internal fun QuestionDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.setId(questionId)
         viewModel.fetchQuestionDetails()
+        viewModel.sideEffect.collect {
+            when (it) {
+                QuestionDetailsSideEffect.DeleteSuccess -> {
+                    navController.navigate(NavigationRoute.Main.MAIN)
+                }
+            }
+        }
     }
 
     Column {
@@ -53,13 +64,24 @@ internal fun QuestionDetailsScreen(
         Column(
             modifier = Modifier
                 .weight(1f)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = details.title,
-                    style = DmsTheme.typography.body2,
-                )
+            Column() {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = details.title,
+                        style = DmsTheme.typography.body2,
+                    )
+                    Icon(
+                        modifier = Modifier.clickable { viewModel.deleteQuestion() },
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "icon delete",
+                    )
+                }
                 Text(
                     text = details.author,
                     style = DmsTheme.typography.overline,
@@ -78,16 +100,20 @@ internal fun QuestionDetailsScreen(
                     style = DmsTheme.typography.body2,
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = "작성하기",
-                    style = DmsTheme.typography.body2,
-                    color = Color(0xFF999999),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_pencil),
-                    contentDescription = null,
-                )
+                Row(
+                    modifier = Modifier.clickable { navController.navigate(NavigationRoute.Main.CREATE_REPLY) }
+                ) {
+                    Text(
+                        text = "작성하기",
+                        style = DmsTheme.typography.body2,
+                        color = Color(0xFF999999),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_pencil),
+                        contentDescription = null,
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(24.dp))
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
