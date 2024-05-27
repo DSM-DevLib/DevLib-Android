@@ -34,7 +34,10 @@ internal fun RootScreen(
             }
 
             composable(route = NavigationRoute.Root.QUESTION) {
-                QuestionScreen(navController = navHostController)
+                QuestionScreen(
+                    navController = navController,
+                    navHostController = navHostController,
+                )
             }
 
             composable(route = NavigationRoute.Root.PROFILE) {

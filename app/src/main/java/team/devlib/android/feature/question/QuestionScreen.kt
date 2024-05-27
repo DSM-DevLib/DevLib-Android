@@ -13,32 +13,35 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import team.aliens.dms.android.core.designsystem.shadow
+import team.devlib.android.R
 import team.devlib.android.feature.home.SearchBar
+import team.devlib.android.navigation.NavigationRoute
 import team.devlib.designsystem.ui.DmsTheme
 
 @Composable
 internal fun QuestionScreen(
     navController: NavController,
+    navHostController: NavHostController,
     questionViewModel: QuestionViewModel = hiltViewModel(),
 ) {
     val state by questionViewModel.state.collectAsState()
-    val (question, onQuestionChange) = remember {
-        mutableStateOf("")
-    }
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -69,6 +72,19 @@ internal fun QuestionScreen(
                     date = it.createdDate,
                 )
             }
+        }
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(bottom = 24.dp),
+            onClick = { navController.navigate(NavigationRoute.Main.CREATE_QUESTION) },
+            containerColor = Color.Black,
+            contentColor = Color.White,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_plus),
+                contentDescription = "icon plus",
+            )
         }
     }
 }

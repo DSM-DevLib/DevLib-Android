@@ -22,6 +22,7 @@ sealed interface RequestUrl {
 
     data object Reply : RequestUrl {
         const val reply = "/reply/{question-id}"
+        const val deleteReply = "/reply/{reply-id}"
 
     }
 }

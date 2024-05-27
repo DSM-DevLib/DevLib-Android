@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import team.devlib.android.feature.bookdetails.BookDetailsScreen
+import team.devlib.android.feature.question.CreateQuestionScreen
 import team.devlib.android.feature.question.QuestionDetailsScreen
 import team.devlib.android.feature.signin.SignInScreen
 import team.devlib.android.feature.signup.SignUpScreen
@@ -78,6 +79,10 @@ private fun NavGraphBuilder.main(navController: NavController) {
                 navController = navController,
                 questionId = questionId,
             )
+        }
+
+        composable(route = NavigationRoute.Main.CREATE_QUESTION) {
+            CreateQuestionScreen(navController = navController)
         }
 
         composable(

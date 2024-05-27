@@ -92,7 +92,6 @@ internal fun QuestionDetailsScreen(
             Spacer(modifier = Modifier.height(24.dp))
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 repeat(viewModel.replies.size) {
-                    val element = viewModel.replies[it]
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -109,19 +108,19 @@ internal fun QuestionDetailsScreen(
                     ) {
                         Row {
                             Text(
-                                text = element.username,
+                                text = state.replies.username,
                                 style = DmsTheme.typography.caption,
                                 fontWeight = FontWeight.Bold,
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
-                                text = element.createdDate.split('T')[0],
+                                text = state.replies.createdDate.split('T')[0],
                                 style = DmsTheme.typography.caption,
                                 fontWeight = FontWeight.Bold,
                             )
                         }
                         Text(
-                            text = element.content,
+                            text = state.replies.content,
                             style = DmsTheme.typography.body3,
                         )
                     }

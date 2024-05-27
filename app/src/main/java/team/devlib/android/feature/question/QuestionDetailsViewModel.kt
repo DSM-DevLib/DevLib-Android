@@ -43,11 +43,18 @@ internal class QuestionDetailsViewModel @Inject constructor(
 
 internal data class QuestionDetailsState(
     val id: Long = 0L,
+    val replies: FetchQuestionDetailsResponse.Reply = FetchQuestionDetailsResponse.Reply(
+        createdDate = "",
+        username = "",
+        likeCount = 0,
+        content = "",
+        bookId = 0L,
+    ),
     val details: FetchQuestionDetailsResponse = FetchQuestionDetailsResponse(
         title = "",
         content = "",
         author = "",
-        replyList = listOf(),
+        replyList = listOf(replies),
     ),
 )
 
