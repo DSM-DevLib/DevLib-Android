@@ -25,6 +25,7 @@ internal class MyPageViewModel @Inject constructor(
 
     init {
         fetchUserInformation()
+        fetchMyBookmarks()
     }
 
     private fun fetchUserInformation() {
@@ -36,7 +37,7 @@ internal class MyPageViewModel @Inject constructor(
             }.onSuccess {
                 setState { state.value.copy(name = it.accountId) }
             }.onFailure {
-
+                it.printStackTrace()
             }
         }
     }
@@ -50,7 +51,7 @@ internal class MyPageViewModel @Inject constructor(
             }.onSuccess {
                 bookmarks.addAll(it.bookmarks)
             }.onFailure {
-
+                it.printStackTrace()
             }
         }
     }

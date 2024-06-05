@@ -1,7 +1,6 @@
 package team.devlib.android.data.remote.api
 
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -14,8 +13,7 @@ import team.devlib.android.feature.home.Type
 
 interface BookApi {
     @GET(RequestUrl.Book.mark)
-    suspend fun fetchMyBookmarks(
-    ): FetchMyBookmarksResponse
+    suspend fun fetchMyBookmarks(): FetchMyBookmarksResponse
 
     @GET(RequestUrl.Book.rank)
     suspend fun fetchBookRanking(
@@ -37,7 +35,7 @@ interface BookApi {
         @Path("book-id") bookId: Long,
     )
 
-    @GET(RequestUrl.Book.review)
+    @GET(RequestUrl.Review.)
     suspend fun fetchBookReviews(
         @Path("book-id") bookId: Long,
     ): FetchBookReviewsResponse
