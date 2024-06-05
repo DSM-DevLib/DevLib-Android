@@ -38,7 +38,7 @@ internal fun RootScreen(
             }
 
             composable(route = NavigationRoute.Root.PROFILE) {
-                MyPageScreen(navController = navHostController)
+                MyPageScreen(navHostController = navController)
             }
         }
     }

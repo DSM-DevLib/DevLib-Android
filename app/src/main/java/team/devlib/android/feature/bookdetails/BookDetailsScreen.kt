@@ -82,6 +82,7 @@ internal fun BookDetailsScreen(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
+
             AsyncImage(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -251,7 +252,10 @@ internal fun BookDetailsScreen(
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Column(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
                 repeat(viewModel.reviews.size) {
                     val element = viewModel.reviews[it]
                     Column(

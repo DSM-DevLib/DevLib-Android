@@ -35,7 +35,7 @@ interface BookApi {
         @Path("book-id") bookId: Long,
     )
 
-    @GET(RequestUrl.Review.)
+    @GET(RequestUrl.Review.POST_REVIEW)
     suspend fun fetchBookReviews(
         @Path("book-id") bookId: Long,
     ): FetchBookReviewsResponse

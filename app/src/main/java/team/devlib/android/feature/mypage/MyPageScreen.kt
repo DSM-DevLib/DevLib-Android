@@ -43,7 +43,7 @@ import team.devlib.designsystem.ui.DmsTheme
 
 @Composable
 internal fun MyPageScreen(
-    navController: NavController,
+    navHostController: NavController,
     myPageViewModel: MyPageViewModel = hiltViewModel(),
 ) {
     val state by myPageViewModel.state.collectAsState()
@@ -84,13 +84,15 @@ internal fun MyPageScreen(
         )
         Spacer(modifier = Modifier.height(20.dp))
         LazyColumn(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             items(myPageViewModel.bookmarks) {
                 BookmarkItem(
                     id = it.id,
-                    onClick = { navController.navigate("${NavigationRoute.Main.BOOK_DETAILS}/{$it}") },
+                    onClick = { navHostController.navigate("${NavigationRoute.Main.BOOK_DETAILS}/$it") },
                     title = it.name,
                     author = it.author,
                     imageUrl = it.cover,
@@ -189,5 +191,5 @@ private fun BookmarkItemPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MyPageScreenPreview() {
-    MyPageScreen(navController = rememberNavController())
+    MyPageScreen(navHostController = rememberNavController())
 }
