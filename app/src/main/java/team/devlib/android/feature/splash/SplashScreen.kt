@@ -21,7 +21,7 @@ internal fun SplashScreen(
 ) {
     LaunchedEffect(Unit) {
         delay(2000L) // 로그인 속도가 빨라서 스플래시가 안보임
-        splashViewModel.checkAccessToken()
+        /*splashViewModel.checkAccessToken()
         splashViewModel.sideEffect.collect {
             when (it) {
                 is SplashSideEffect.Success -> {
@@ -32,7 +32,8 @@ internal fun SplashScreen(
                     navController.navigate(NavigationRoute.Auth.SIGN_IN)
                 }
             }
-        }
+        }*/
+        navController.navigate(NavigationRoute.Auth.SIGN_IN)
     }
     Box(
         modifier = Modifier.fillMaxSize(),
