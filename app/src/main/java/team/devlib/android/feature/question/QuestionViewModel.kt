@@ -6,7 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
+import team.devlib.android.data.remote.api.BookApi
 import team.devlib.android.data.remote.api.QuestionApi
+import team.devlib.android.data.remote.model.book.FetchBookRankingResponse
 import team.devlib.android.data.remote.model.question.FetchQuestionsResponse
 import team.devlib.android.data.remote.model.question.PostQuestionRequest
 import team.devlib.android.feature.home.Type
@@ -23,11 +25,14 @@ internal class QuestionViewModel @Inject constructor(
         fetchQuestions()
     }
 
-    private fun fetchQuestions() {
+    internal fun fetchQuestions() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                questionApi.fetchQuestions()
+                questionApi.fetchQuestions(
+                    title = state.value.keyword,
+                )
             }.onSuccess {
+                questions.clear()
                 questions.addAll(it.questions)
             }
         }
@@ -61,7 +66,6 @@ internal class QuestionViewModel @Inject constructor(
     internal fun setContent(content: String) = setState {
         state.value.copy(content = content)
     }
-
 }
 
 internal data class QuestionState(

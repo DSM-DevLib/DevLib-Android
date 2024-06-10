@@ -58,7 +58,10 @@ internal fun QuestionScreen(
             value = state.keyword,
             onValueChange = questionViewModel::onKeywordChange,
             hint = "검색어를 입력하세요.",
-            onClick = { focusManager.clearFocus() },
+            onClick = {
+                questionViewModel.fetchQuestions()
+                focusManager.clearFocus()
+            },
         )
         Spacer(modifier = Modifier.height(40.dp))
         LazyColumn(

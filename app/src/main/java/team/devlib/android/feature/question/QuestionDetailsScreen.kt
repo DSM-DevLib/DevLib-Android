@@ -94,7 +94,7 @@ internal fun QuestionDetailsScreen(
                 )
             }
             Spacer(modifier = Modifier.height(38.dp))
-            Row(modifier = Modifier.padding(horizontal = 24.dp)) {
+            Row {
                 Text(
                     text = "답변",
                     style = DmsTheme.typography.body2,
