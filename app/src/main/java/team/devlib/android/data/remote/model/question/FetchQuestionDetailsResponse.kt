@@ -17,5 +17,8 @@ data class FetchQuestionDetailsResponse(
         val content: String,
         @SerializedName("book_id") val bookId: Long,
         val mine: Boolean,
+        @SerializedName("image_url") val imageUrl: String,
+        val liked: Boolean,
+        val id: Long,
     )
 }

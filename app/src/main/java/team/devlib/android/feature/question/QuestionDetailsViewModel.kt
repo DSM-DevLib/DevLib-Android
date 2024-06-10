@@ -1,14 +1,13 @@
 package team.devlib.android.feature.question
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
 import team.devlib.android.data.remote.api.QuestionApi
-import team.devlib.android.data.remote.model.book.FetchBookRankingResponse
+import team.devlib.android.data.remote.api.ReplyApi
 import team.devlib.android.data.remote.model.question.FetchQuestionDetailsResponse
 import team.devlib.android.data.util.RequestHandler
 import javax.inject.Inject
@@ -16,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class QuestionDetailsViewModel @Inject constructor(
     private val questionApi: QuestionApi,
+    private val replyApi: ReplyApi,
 ) : BaseViewModel<QuestionDetailsState, QuestionDetailsSideEffect>(QuestionDetailsState()) {
 
     internal val replies = mutableStateListOf<FetchQuestionDetailsResponse.Reply>()
@@ -33,8 +33,43 @@ internal class QuestionDetailsViewModel @Inject constructor(
                 setState {
                     state.value.copy(details = it)
                 }
+                replies.addAll(it.replyList)
             }.onFailure {
 
+            }
+        }
+    }
+
+    fun postGood() {
+        setState {
+            state.value.copy(
+                replies = state.value.replies.copy(
+                    liked = !state.value.replies.liked
+                )
+            )
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                RequestHandler<Unit>().request {
+                    replyApi.postGood(replyId = state.value.replies.id)
+                }
+            }
+        }
+    }
+
+    fun deleteGood() {
+        setState {
+            state.value.copy(
+                replies = state.value.replies.copy(
+                    liked = !state.value.replies.liked
+                )
+            )
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                RequestHandler<Unit>().request {
+                    replyApi.deleteGood(replyId = state.value.replies.id)
+                }
             }
         }
     }
@@ -59,6 +94,9 @@ internal data class QuestionDetailsState(
         content = "",
         bookId = 0L,
         mine = false,
+        imageUrl = "",
+        liked = false,
+        id = 0L,
     ),
     val details: FetchQuestionDetailsResponse = FetchQuestionDetailsResponse(
         id = 0L,

@@ -25,5 +25,13 @@ interface ReplyApi {
         @Path("reply-id") replyId: Long,
     )
 
-    
+    @POST(RequestUrl.Reply.postGood)
+    suspend fun postGood(
+        @Path("reply-id") replyId: Long,
+    )
+
+    @DELETE(RequestUrl.Reply.postGood)
+    suspend fun deleteGood(
+        @Path("reply-id") replyId: Long,
+    )
 }
