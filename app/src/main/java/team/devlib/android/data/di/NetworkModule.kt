@@ -12,6 +12,7 @@ import retrofit2.create
 import team.devlib.android.data.interceptor.AccessTokenInterceptor
 import team.devlib.android.data.remote.api.BookApi
 import team.devlib.android.data.remote.api.QuestionApi
+import team.devlib.android.data.remote.api.ReplyApi
 import team.devlib.android.data.remote.api.UserApi
 import javax.inject.Singleton
 
@@ -72,5 +73,11 @@ object NetworkModule {
     @Singleton
     fun provideQuestionApi(retrofit: Retrofit): QuestionApi {
         return retrofit.create(QuestionApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReplyApi(retrofit: Retrofit): ReplyApi {
+        return retrofit.create(ReplyApi::class.java)
     }
 }
