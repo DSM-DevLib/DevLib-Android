@@ -13,6 +13,7 @@ import team.devlib.android.feature.bookdetails.BookDetailsScreen
 import team.devlib.android.feature.question.CreateQuestionScreen
 import team.devlib.android.feature.question.QuestionDetailsScreen
 import team.devlib.android.feature.reply.CreateReplyScreen
+import team.devlib.android.feature.reply.SelectBookScreen
 import team.devlib.android.feature.signin.SignInScreen
 import team.devlib.android.feature.signup.SignUpScreen
 import team.devlib.android.feature.splash.SplashScreen
@@ -104,6 +105,10 @@ private fun NavGraphBuilder.main(navController: NavController) {
                 bookId = bookId,
                 navController = navController,
             )
+        }
+
+        composable(route = NavigationRoute.Main.SELECT_BOOK) {
+            SelectBookScreen(navController = navController)
         }
     }
 }
