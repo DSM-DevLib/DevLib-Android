@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import team.devlib.android.base.BaseViewModel
 import team.devlib.android.data.remote.api.QuestionApi
+import team.devlib.android.data.remote.model.book.FetchBookRankingResponse
 import team.devlib.android.data.remote.model.question.FetchQuestionDetailsResponse
 import team.devlib.android.data.util.RequestHandler
 import javax.inject.Inject
@@ -17,9 +18,7 @@ internal class QuestionDetailsViewModel @Inject constructor(
     private val questionApi: QuestionApi,
 ) : BaseViewModel<QuestionDetailsState, QuestionDetailsSideEffect>(QuestionDetailsState()) {
 
-    internal val replies: SnapshotStateList<FetchQuestionDetailsResponse.Reply> =
-        mutableStateListOf()
-
+    internal val replies = mutableStateListOf<FetchQuestionDetailsResponse.Reply>()
     fun setId(id: Long) = setState {
         state.value.copy(id = id)
     }
@@ -62,6 +61,7 @@ internal data class QuestionDetailsState(
         mine = false,
     ),
     val details: FetchQuestionDetailsResponse = FetchQuestionDetailsResponse(
+        id = 0L,
         title = "",
         content = "",
         author = "",

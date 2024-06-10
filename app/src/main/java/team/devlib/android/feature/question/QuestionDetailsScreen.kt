@@ -67,7 +67,7 @@ internal fun QuestionDetailsScreen(
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Column() {
+            Column {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -101,7 +101,9 @@ internal fun QuestionDetailsScreen(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Row(
-                    modifier = Modifier.clickable { navController.navigate(NavigationRoute.Main.CREATE_REPLY) }
+                    modifier = Modifier.clickable {
+                        navController.navigate("${NavigationRoute.Main.CREATE_REPLY}/$questionId")
+                    }
                 ) {
                     Text(
                         text = "작성하기",
@@ -118,6 +120,7 @@ internal fun QuestionDetailsScreen(
             Spacer(modifier = Modifier.height(24.dp))
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 repeat(viewModel.replies.size) {
+                    val element = viewModel.replies[it]
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -134,19 +137,19 @@ internal fun QuestionDetailsScreen(
                     ) {
                         Row {
                             Text(
-                                text = state.replies.username,
+                                text = element.username,
                                 style = DmsTheme.typography.caption,
                                 fontWeight = FontWeight.Bold,
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
-                                text = state.replies.createdDate.split('T')[0],
+                                text = element.createdDate.split('T')[0],
                                 style = DmsTheme.typography.caption,
                                 fontWeight = FontWeight.Bold,
                             )
                         }
                         Text(
-                            text = state.replies.content,
+                            text = element.content,
                             style = DmsTheme.typography.body3,
                         )
                     }
