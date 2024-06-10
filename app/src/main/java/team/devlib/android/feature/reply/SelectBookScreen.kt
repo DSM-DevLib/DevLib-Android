@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import dagger.hilt.android.lifecycle.HiltViewModel
 import team.devlib.android.feature.home.HomeViewModel
 import team.devlib.android.feature.home.SearchBar
 import team.devlib.android.feature.mypage.BookmarkItem
@@ -26,9 +27,8 @@ import team.devlib.android.feature.mypage.BookmarkItem
 @Composable
 internal fun SelectBookScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel(),
-
-    ) {
+    viewModel: HomeViewModel,
+) {
     val state by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
 
