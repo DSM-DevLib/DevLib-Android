@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import team.aliens.dms.android.core.designsystem.TextField
 import team.devlib.android.feature.bookdetails.Header
@@ -29,12 +28,14 @@ import team.devlib.designsystem.ui.DmsTheme
 @Composable
 internal fun CreateReplyScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel(),
+    questionId: Long,
+    viewModel: HomeViewModel,
 ) {
     val state by viewModel.state.collectAsState()
 
 
     LaunchedEffect(Unit) {
+        viewModel.setId(questionId)
         viewModel.sideEffect.collect {
             when (it) {
                 HomeSideEffect.CreateReplySuccess -> {

@@ -33,8 +33,14 @@ internal class HomeViewModel @Inject constructor(
         fetchBookRanking()
     }
 
+    fun setId(id: Long) = setState {
+        state.value.copy(questionId = id)
+    }
+
     internal fun setBookId(bookId: Long) {
-        
+        setState {
+            state.value.copy(bookId = bookId)
+        }
     }
 
     internal fun onContentChange(content: String) = setState {

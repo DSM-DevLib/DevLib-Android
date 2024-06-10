@@ -3,6 +3,7 @@ package team.devlib.android.data.remote.model.question
 import com.google.gson.annotations.SerializedName
 
 data class FetchQuestionDetailsResponse(
+    val id: Long,
     val title: String,
     val content: String,
     val author: String,
