@@ -13,12 +13,12 @@ data class FetchQuestionDetailsResponse(
     data class Reply(
         @SerializedName("created_date") val createdDate: String,
         val username: String,
-        @SerializedName("like_count") val likeCount: Int,
+        @SerializedName("like_count") var likeCount: Int,
         val content: String,
         @SerializedName("book_id") val bookId: Long,
         val mine: Boolean,
         @SerializedName("image_url") val imageUrl: String,
-        val liked: Boolean,
+        var liked: Boolean,
         val id: Long,
     )
 }
