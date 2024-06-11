@@ -40,7 +40,7 @@ internal class QuestionDetailsViewModel @Inject constructor(
         }
     }
 
-    fun postGood() {
+    fun postGood(id: Long) {
         setState {
             state.value.copy(
                 replies = state.value.replies.copy(
@@ -51,13 +51,23 @@ internal class QuestionDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<Unit>().request {
-                    replyApi.postGood(replyId = state.value.replies.id)
+                    replyApi.postGood(replyId = id)
                 }
             }
         }
     }
 
-    fun deleteGood() {
+    fun deleteReply(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                replyApi.deleteReply(replyId = id)
+            }.onSuccess {
+                postSideEffect(QuestionDetailsSideEffect.ReplyDeleteSuccess)
+            }
+        }
+    }
+
+    fun deleteGood(id: Long) {
         setState {
             state.value.copy(
                 replies = state.value.replies.copy(
@@ -68,7 +78,7 @@ internal class QuestionDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<Unit>().request {
-                    replyApi.deleteGood(replyId = state.value.replies.id)
+                    replyApi.deleteGood(replyId = id)
                 }
             }
         }
@@ -110,4 +120,5 @@ internal data class QuestionDetailsState(
 
 internal sealed interface QuestionDetailsSideEffect {
     data object DeleteSuccess : QuestionDetailsSideEffect
+    data object ReplyDeleteSuccess : QuestionDetailsSideEffect
 }

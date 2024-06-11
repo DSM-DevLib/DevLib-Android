@@ -2,7 +2,6 @@ package team.devlib.android.feature.question
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,6 +58,8 @@ internal fun QuestionDetailsScreen(
                 QuestionDetailsSideEffect.DeleteSuccess -> {
                     navController.navigate(NavigationRoute.Main.MAIN)
                 }
+
+                QuestionDetailsSideEffect.ReplyDeleteSuccess -> {/*reply clear, reply addAll*/ }
             }
         }
     }
@@ -140,7 +141,10 @@ internal fun QuestionDetailsScreen(
                                 horizontal = 12.dp,
                             ),
                     ) {
-                        Row {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
                             Text(
                                 text = element.username,
                                 style = DmsTheme.typography.caption,
@@ -153,42 +157,48 @@ internal fun QuestionDetailsScreen(
                                 fontWeight = FontWeight.Bold,
                             )
                         }
-                        Row {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
                             Text(
                                 text = element.content,
                                 style = DmsTheme.typography.body3,
                             )
                             AsyncImage(
                                 modifier = Modifier.size(
-                                    width = 196.dp,
-                                    height = 278.dp,
+                                    width = 104.dp,
+                                    height = 113.dp,
                                 ),
-                                model = state.replies.imageUrl,
+                                model = element.imageUrl,
                                 contentDescription = null,
                             )
                         }
+                        Spacer(modifier = Modifier.height(10.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Icon(
-                                modifier = Modifier.clickable {
-
-                                },
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "icon delete",
-                            )
+                            if (element.mine) {
+                                Icon(
+                                    modifier = Modifier.clickable {
+                                        viewModel.deleteReply(element.id)
+                                    },
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "icon delete",
+                                )
+                            }
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                            ){
+                            ) {
                                 Icon(
-                                    modifier = Modifier.clickable(
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        indication = null,
-                                        onClick = if (element.liked) viewModel::deleteGood
-                                        else viewModel::postGood,
-                                    ),
+                                    modifier = Modifier.clickable {
+                                        if (element.liked) viewModel.deleteGood(element.id)
+                                        else viewModel.postGood(element.id)
+                                    },
                                     painter = painterResource(
                                         id = if (element.liked) R.drawable.ic_fill_good
                                         else R.drawable.ic_empty_good,
