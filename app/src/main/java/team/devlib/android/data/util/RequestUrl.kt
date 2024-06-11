@@ -14,9 +14,15 @@ sealed interface RequestUrl {
         const val bookmark = "$book/{book-id}/mark"
     }
 
-    data object Question: RequestUrl {
+    data object Question : RequestUrl {
         const val question = "/question"
         const val details = "$question/{question-id}"
+    }
+
+    data object Reply : RequestUrl {
+        const val reply = "/reply/{question-id}"
+        const val deleteReply = "/reply/{reply-id}"
+        const val postGood = "/reaction/{reply-id}"
     }
 
     data object Review : RequestUrl {

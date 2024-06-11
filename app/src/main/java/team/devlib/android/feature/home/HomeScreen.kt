@@ -138,6 +138,7 @@ internal fun SearchBar(
             value = value,
             onValueChange = onValueChange,
             textStyle = DmsTheme.typography.body3,
+            maxLines = 1,
         ) { innerTextField ->
             if (value.isEmpty()) {
                 Text(
