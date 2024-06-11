@@ -1,5 +1,9 @@
 package team.devlib.android.feature.bookdetails
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -30,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import team.aliens.dms.android.core.designsystem.shadow
 import team.devlib.android.R
+import team.devlib.android.navigation.NavigationRoute
 import team.devlib.designsystem.ui.ButtonDefaults
 import team.devlib.designsystem.ui.ContainedButton
 import team.devlib.designsystem.ui.DmsTheme
@@ -51,12 +57,18 @@ internal fun BookDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val details = state.details
-    var star by remember { mutableIntStateOf(0) }
+    var point by remember { mutableIntStateOf(0) }
+    val activityResultLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+
+        }
 
     LaunchedEffect(Unit) {
-        viewModel.setId(bookId)
-        viewModel.fetchBookDetails()
-        viewModel.fetchBookReviews()
+        with(viewModel) {
+            setId(bookId)
+            fetchBookDetails()
+            fetchBookReviews()
+        }
     }
 
     Column {
@@ -70,6 +82,7 @@ internal fun BookDetailsScreen(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
+
             AsyncImage(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -117,7 +130,7 @@ internal fun BookDetailsScreen(
                 )
             }
             Spacer(modifier = Modifier.height(26.dp))
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp)
@@ -141,31 +154,50 @@ internal fun BookDetailsScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
+                        modifier = Modifier,
                         text = details.purchaseSite,
                         style = DmsTheme.typography.body3,
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = DecimalFormat("#,###").format(24000),
-                        style = DmsTheme.typography.body3,
-                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                ContainedButton(
-                    modifier = Modifier.align(Alignment.Bottom),
-                    onClick = {},
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF555555))
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = "바로가기",
+                        text = DecimalFormat("#,###").format(details.price).plus("원"),
                         style = DmsTheme.typography.body3,
                         fontWeight = FontWeight.Bold,
                     )
+                    ContainedButton(
+                        modifier = Modifier.align(Alignment.Bottom),
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(details.purchaseSite))
+                            activityResultLauncher.launch(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF555555))
+                    ) {
+                        Text(
+                            text = "바로가기",
+                            style = DmsTheme.typography.body3,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(38.dp))
-            Row(modifier = Modifier.padding(horizontal = 24.dp)) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = { navController.navigate("${NavigationRoute.Main.POST_REVIEW}/${bookId}") }
+                    )
+            ) {
                 Text(
                     text = "후기",
                     style = DmsTheme.typography.body2,
@@ -193,10 +225,10 @@ internal fun BookDetailsScreen(
                             modifier = Modifier.clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() },
-                                onClick = { star = it + 1 }
+                                onClick = { point = it + 1 }
                             ),
                             painter = painterResource(
-                                id = if (star - 1 >= it) R.drawable.ic_star_on
+                                id = if (point - 1 >= it) R.drawable.ic_star_on
                                 else R.drawable.ic_star_off,
                             ),
                             contentDescription = null,
@@ -220,7 +252,10 @@ internal fun BookDetailsScreen(
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Column(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
                 repeat(viewModel.reviews.size) {
                     val element = viewModel.reviews[it]
                     Column(
@@ -273,6 +308,7 @@ internal fun BookDetailsScreen(
 @Composable
 internal fun Header(
     modifier: Modifier = Modifier,
+    title: String? = null,
     onClick: () -> Unit,
 ) {
     Row(
@@ -283,8 +319,18 @@ internal fun Header(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
+            modifier = Modifier.clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onClick,
+            ),
             painter = painterResource(id = R.drawable.ic_arrow_back),
             contentDescription = null,
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = title ?: "",
+            style = DmsTheme.typography.body2,
         )
     }
 }

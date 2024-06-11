@@ -8,15 +8,31 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
-import team.devlib.android.navigation.NavigationRoute
 import team.devlib.android.R
+import team.devlib.android.navigation.NavigationRoute
 
 @Composable
-internal fun SplashScreen(navController: NavController) {
+internal fun SplashScreen(
+    navController: NavController,
+    splashViewModel: SplashViewModel = hiltViewModel(),
+) {
     LaunchedEffect(Unit) {
-        delay(2000L)
+        delay(2000L) // 로그인 속도가 빨라서 스플래시가 안보임
+        /*splashViewModel.checkAccessToken()
+        splashViewModel.sideEffect.collect {
+            when (it) {
+                is SplashSideEffect.Success -> {
+                    navController.navigate(NavigationRoute.Main.MAIN)
+                }
+
+                else -> {
+                    navController.navigate(NavigationRoute.Auth.SIGN_IN)
+                }
+            }
+        }*/
         navController.navigate(NavigationRoute.Auth.SIGN_IN)
     }
     Box(

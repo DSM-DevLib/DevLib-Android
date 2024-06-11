@@ -1,7 +1,10 @@
 package team.devlib.android.navigation
 
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -16,6 +19,7 @@ import team.devlib.android.feature.question.CreateQuestionScreen
 import team.devlib.android.feature.question.QuestionDetailsScreen
 import team.devlib.android.feature.reply.CreateReplyScreen
 import team.devlib.android.feature.reply.SelectBookScreen
+import team.devlib.android.feature.review.PostReviewScreen
 import team.devlib.android.feature.signin.SignInScreen
 import team.devlib.android.feature.signup.SignUpScreen
 import team.devlib.android.feature.splash.SplashScreen
@@ -25,6 +29,9 @@ internal fun DevlibApp() {
     val navController = rememberNavController()
     val homeViewModel = hiltViewModel<HomeViewModel>()
     NavHost(
+        modifier = Modifier
+            .navigationBarsPadding()
+            .statusBarsPadding(),
         navController = navController,
         startDestination = NavigationRoute.Auth.route,
     ) {
@@ -133,6 +140,22 @@ private fun NavGraphBuilder.main(
             SelectBookScreen(
                 navController = navController,
                 viewModel = viewModel,
+            )
+        }
+
+        composable(
+            route = "${NavigationRoute.Main.POST_REVIEW}/${NavigationRoute.Arguments.BOOK_ID}",
+            arguments = listOf(
+                navArgument(
+                    name = "book-id",
+                    builder = { type = NavType.LongType },
+                )
+            ),
+        ) {
+            val bookId = it.arguments?.getLong("book-id") ?: 0L
+            PostReviewScreen(
+                navController = navController,
+                bookId = bookId,
             )
         }
     }

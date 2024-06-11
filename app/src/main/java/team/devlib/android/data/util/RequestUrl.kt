@@ -12,7 +12,6 @@ sealed interface RequestUrl {
         const val rank = "$book/rank"
         const val details = "$book/{book-id}"
         const val bookmark = "$book/{book-id}/mark"
-        const val review = "$book/{book-id}/review"
     }
 
     data object Question : RequestUrl {
@@ -24,5 +23,10 @@ sealed interface RequestUrl {
         const val reply = "/reply/{question-id}"
         const val deleteReply = "/reply/{reply-id}"
         const val postGood = "/reaction/{reply-id}"
+    }
+
+    data object Review : RequestUrl {
+        private const val REVIEW = "/review"
+        const val POST_REVIEW = "$REVIEW/{book-id}"
     }
 }

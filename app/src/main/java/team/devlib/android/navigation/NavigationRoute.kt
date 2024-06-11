@@ -20,6 +20,7 @@ sealed class NavigationRoute(val route: String) {
         val CREATE_QUESTION = "$route/question/create"
         val CREATE_REPLY = "$route/reply/create"
         val SELECT_BOOK = "$route/reply/select"
+        val POST_REVIEW = "$route/postReview"
     }
 
     data object Arguments {

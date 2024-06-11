@@ -156,7 +156,7 @@ internal fun SearchBar(
 enum class Type(val value: String) {
     VIEW("조회수"),
     REVIEW("후기수"),
-    STAR("별점"),
+    SCORE("별점"),
 }
 
 @Composable
@@ -216,10 +216,10 @@ private fun FilterButtons(
             )
         }
         OutlinedButton(
-            onClick = { onClick(Type.STAR) },
+            onClick = { onClick(Type.SCORE) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = animateColorAsState(
-                    targetValue = if (type == Type.STAR) Color(0xFF555555)
+                    targetValue = if (type == Type.SCORE) Color(0xFF555555)
                     else Color.White,
                     label = "",
                 ).value,
@@ -230,10 +230,10 @@ private fun FilterButtons(
             ),
         ) {
             Text(
-                text = Type.STAR.value,
+                text = Type.SCORE.value,
                 style = DmsTheme.typography.body3,
                 color = animateColorAsState(
-                    targetValue = if (type == Type.STAR) Color.White
+                    targetValue = if (type == Type.SCORE) Color.White
                     else Color(0xFF555555),
                     label = "",
                 ).value,
