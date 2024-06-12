@@ -19,10 +19,7 @@ class AuthDataStorageImpl @Inject constructor(
     override fun fetchAccessToken(): String = getSharedPreference().getString(ACCESS_TOKEN, "")!!
 
     override fun clearAccessToken() {
-        getSharedPreference().edit().let {
-            it.remove(ACCESS_TOKEN)
-            it.apply()
-        }
+        getSharedPreference().edit().clear().apply()
     }
 
     private fun getSharedPreference() =
