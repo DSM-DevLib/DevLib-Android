@@ -2,7 +2,6 @@ package team.devlib.android.data.remote.api
 
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import team.devlib.android.data.remote.model.user.request.SignInRequest
 import team.devlib.android.data.remote.model.user.request.SignUpRequest
@@ -19,7 +18,7 @@ interface UserApi {
     @POST(RequestUrl.User.user)
     suspend fun signUp(
         @Body signUpRequest: SignUpRequest
-    ): TokenResponse
+    )
 
     @GET(RequestUrl.User.user)
     suspend fun fetchUserInformation(): UserInformationResponse

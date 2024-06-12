@@ -57,7 +57,7 @@ internal fun SignUpScreen(
             when (it) {
                 is SignUpSideEffect.Success -> {
                     withContext(Dispatchers.Main) {
-                        navController.navigate(NavigationRoute.Main.MAIN) {
+                        navController.navigate(NavigationRoute.Auth.SIGN_IN) {
                             popUpTo(0)
                         }
                     }
