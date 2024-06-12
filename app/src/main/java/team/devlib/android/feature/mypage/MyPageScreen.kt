@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -139,10 +140,12 @@ internal fun BookmarkItem(
                 style = DmsTheme.typography.body3,
             )
         }
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
                 style = DmsTheme.typography.body2,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
             )
             Text(
                 text = author,
@@ -150,7 +153,6 @@ internal fun BookmarkItem(
                 color = Color(0xFF999999),
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
         AsyncImage(
             modifier = Modifier.size(
                 width = 36.dp,
