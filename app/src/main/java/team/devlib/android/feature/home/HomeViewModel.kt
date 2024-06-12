@@ -60,6 +60,7 @@ internal class HomeViewModel @Inject constructor(
             runCatching {
                 bookApi.fetchBookRanking(type = state.value.type)
             }.onSuccess {
+                books.clear()
                 books.addAll(it.books)
             }
         }
