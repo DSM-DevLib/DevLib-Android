@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -82,11 +83,13 @@ internal fun QuestionDetailsScreen(
                         text = details.title,
                         style = DmsTheme.typography.body2,
                     )
-                    Icon(
-                        modifier = Modifier.clickable { viewModel.deleteQuestion() },
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "icon delete",
-                    )
+                    if (details.mine) {
+                        Icon(
+                            modifier = Modifier.clickable { viewModel.deleteQuestion() },
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "icon delete",
+                        )
+                    }
                 }
                 Text(
                     text = details.author,
