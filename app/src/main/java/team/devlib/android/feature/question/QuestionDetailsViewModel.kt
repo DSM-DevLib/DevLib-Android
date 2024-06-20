@@ -19,6 +19,7 @@ internal class QuestionDetailsViewModel @Inject constructor(
 ) : BaseViewModel<QuestionDetailsState, QuestionDetailsSideEffect>(QuestionDetailsState()) {
 
     internal val replies = mutableStateListOf<FetchQuestionDetailsResponse.Reply>()
+
     fun setId(id: Long) = setState {
         state.value.copy(id = id)
     }
@@ -30,9 +31,8 @@ internal class QuestionDetailsViewModel @Inject constructor(
                     questionApi.fetchQuestionDetails(questionId = state.value.id)
                 }
             }.onSuccess {
-                setState {
-                    state.value.copy(details = it)
-                }
+                setState { state.value.copy(details = it) }
+                replies.clear()
                 replies.addAll(it.replyList)
             }.onFailure {
 
@@ -41,13 +41,6 @@ internal class QuestionDetailsViewModel @Inject constructor(
     }
 
     fun postGood(id: Long) {
-        setState {
-            state.value.copy(
-                replies = state.value.replies.copy(
-                    liked = !state.value.replies.liked
-                )
-            )
-        }
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<Unit>().request {
@@ -62,19 +55,13 @@ internal class QuestionDetailsViewModel @Inject constructor(
             runCatching {
                 replyApi.deleteReply(replyId = id)
             }.onSuccess {
-                postSideEffect(QuestionDetailsSideEffect.ReplyDeleteSuccess)
+                val reply = replies.find { it.id == id }
+                replies.remove(reply)
             }
         }
     }
 
     fun deleteGood(id: Long) {
-        setState {
-            state.value.copy(
-                replies = state.value.replies.copy(
-                    liked = !state.value.replies.liked
-                )
-            )
-        }
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 RequestHandler<Unit>().request {
@@ -97,28 +84,16 @@ internal class QuestionDetailsViewModel @Inject constructor(
 
 internal data class QuestionDetailsState(
     val id: Long = 0L,
-    val replies: FetchQuestionDetailsResponse.Reply = FetchQuestionDetailsResponse.Reply(
-        createdDate = "",
-        username = "",
-        likeCount = 0,
-        content = "",
-        bookId = 0L,
-        mine = false,
-        imageUrl = "",
-        liked = false,
-        id = 0L,
-    ),
     val details: FetchQuestionDetailsResponse = FetchQuestionDetailsResponse(
         id = 0L,
         title = "",
         content = "",
         author = "",
         mine = false,
-        replyList = listOf(replies),
+        replyList = emptyList(),
     ),
 )
 
 internal sealed interface QuestionDetailsSideEffect {
     data object DeleteSuccess : QuestionDetailsSideEffect
-    data object ReplyDeleteSuccess : QuestionDetailsSideEffect
 }

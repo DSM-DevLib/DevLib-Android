@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,7 +49,6 @@ internal fun QuestionDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val details = state.details
-    var good by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.setId(questionId)
@@ -58,8 +58,6 @@ internal fun QuestionDetailsScreen(
                 QuestionDetailsSideEffect.DeleteSuccess -> {
                     navController.navigate(NavigationRoute.Main.MAIN)
                 }
-
-                QuestionDetailsSideEffect.ReplyDeleteSuccess -> {/*reply clear, reply addAll*/ }
             }
         }
     }
@@ -73,8 +71,7 @@ internal fun QuestionDetailsScreen(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(horizontal = 16.dp),
         ) {
             Column {
                 Row(
@@ -85,11 +82,13 @@ internal fun QuestionDetailsScreen(
                         text = details.title,
                         style = DmsTheme.typography.body2,
                     )
-                    Icon(
-                        modifier = Modifier.clickable { viewModel.deleteQuestion() },
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "icon delete",
-                    )
+                    if (details.mine) {
+                        Icon(
+                            modifier = Modifier.clickable { viewModel.deleteQuestion() },
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "icon delete",
+                        )
+                    }
                 }
                 Text(
                     text = details.author,
@@ -125,9 +124,15 @@ internal fun QuestionDetailsScreen(
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                repeat(viewModel.replies.size) {
-                    val element = viewModel.replies[it]
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
+                items(viewModel.replies) { element ->
+                    var like by remember { mutableStateOf(element.liked) }
+                    var likeCount by remember { mutableIntStateOf(element.likeCount) }
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -191,25 +196,26 @@ internal fun QuestionDetailsScreen(
                                     contentDescription = "icon delete",
                                 )
                             }
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Icon(
                                     modifier = Modifier.clickable {
-                                        if (element.liked) viewModel.deleteGood(element.id)
-                                        else viewModel.postGood(element.id)
+                                        like = !like
+                                        if (like) {
+                                            likeCount += 1
+                                            viewModel.deleteGood(element.id)
+                                        } else {
+                                            likeCount -= 1
+                                            viewModel.postGood(element.id)
+                                        }
                                     },
                                     painter = painterResource(
-                                        id = if (element.liked) R.drawable.ic_fill_good
+                                        id = if (like) R.drawable.ic_fill_good
                                         else R.drawable.ic_empty_good,
                                     ),
                                     contentDescription = "icon good",
                                 )
                                 Text(
-                                    text = "${
-                                        viewModel.replies.sumOf { it.likeCount }
-                                            .div(if (viewModel.replies.size == 0) 1 else viewModel.replies.size)
-                                    }",
+                                    text = likeCount.toString(),
                                     style = DmsTheme.typography.body3,
                                 )
                             }

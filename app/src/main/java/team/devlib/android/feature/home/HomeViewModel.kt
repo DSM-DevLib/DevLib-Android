@@ -29,10 +29,6 @@ internal class HomeViewModel @Inject constructor(
         reviewCount = 0,
     )
 
-    init {
-        fetchBookRanking()
-    }
-
     fun setId(id: Long) = setState {
         state.value.copy(questionId = id)
     }
@@ -59,11 +55,12 @@ internal class HomeViewModel @Inject constructor(
         fetchBookRanking()
     }
 
-    private fun fetchBookRanking() {
+    internal fun fetchBookRanking() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 bookApi.fetchBookRanking(type = state.value.type)
             }.onSuccess {
+                books.clear()
                 books.addAll(it.books)
             }
         }

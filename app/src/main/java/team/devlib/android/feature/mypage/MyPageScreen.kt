@@ -17,8 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,7 +35,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import team.aliens.dms.android.core.designsystem.shadow
-import team.devlib.android.R
 import team.devlib.android.navigation.NavigationRoute
 import team.devlib.designsystem.ui.DmsTheme
 
@@ -96,7 +93,6 @@ internal fun MyPageScreen(
                     title = it.name,
                     author = it.author,
                     imageUrl = it.cover,
-                    isBookmarked = it.isMarked,
                 )
             }
         }
@@ -111,7 +107,6 @@ internal fun BookmarkItem(
     title: String,
     author: String,
     imageUrl: String,
-    isBookmarked: Boolean? = null,
 ) {
     Row(
         modifier = Modifier
@@ -139,10 +134,12 @@ internal fun BookmarkItem(
                 style = DmsTheme.typography.body3,
             )
         }
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
                 style = DmsTheme.typography.body2,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
             )
             Text(
                 text = author,
@@ -150,7 +147,6 @@ internal fun BookmarkItem(
                 color = Color(0xFF999999),
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
         AsyncImage(
             modifier = Modifier.size(
                 width = 36.dp,
@@ -159,19 +155,6 @@ internal fun BookmarkItem(
             model = imageUrl,
             contentDescription = null,
         )
-        isBookmarked?.run {
-            Spacer(modifier = Modifier.width(20.dp))
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    painter = painterResource(
-                        id = if (isBookmarked) R.drawable.ic_bookmark_on
-                        else R.drawable.ic_bookmark_off,
-                    ),
-                    contentDescription = null,
-                    tint = DmsTheme.colorScheme.surfaceVariant,
-                )
-            }
-        }
     }
 }
 
@@ -182,7 +165,6 @@ private fun BookmarkItemPreview() {
         title = "클린 아키텍처",
         author = "저자 최하은",
         imageUrl = "ㅁㅇㄴㄹ",
-        isBookmarked = false,
         onClick = {},
         id = 0L,
     )
